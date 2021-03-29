@@ -1,0 +1,43 @@
+.ant-layout {
+    background-color: transparent;
+}
+
+.ant-layout-header {
+    height: auto;
+    padding: initial;
+}
+
+.site-header {
+    background-color: #fff;
+    border-bottom: 1px solid #cccccc;
+}
+
+.top-navbar {
+    padding: 0 50px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.header-heading {
+    padding: 20px 0;
+}
+
+.profile-img-box {
+    width: 38px;
+    height: 38px;
+    overflow: hidden;
+    border-radius: 50%;
+    img {
+        width: 100%;
+        vertical-align: top;
+    }
+}
+
+.profile-dropdown {
+    /* border: none; */
+    /* padding: 10px 0; */
+}
+
+.drawer-btn {
+    float: right;
+    margin: 10px 0;
+}

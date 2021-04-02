@@ -5,10 +5,10 @@ import { userAccessTokenName } from "../constants";
 
 export const token = getCookie(userAccessTokenName);
 
-// export let host = "https://onlinezako.herokuapp.com";
-export let host = "http://localhost";
-export let port = '8081';
-// export let port = '80';
+export let host = "https://onlinezako-application.herokuapp.com";
+// export let host = "http://localhost";
+// export let port = '8081';
+export let port = '';
 
 export let headers = {
     'X-Requested-With': 'XMLHttpRequest',

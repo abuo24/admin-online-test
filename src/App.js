@@ -20,8 +20,6 @@ class App extends React.Component {
             <Router>
                 <LazyLoadErrorBoundary>
                     <Switch>
-
-
                         <Route path="/login" render={() => (
                             <Suspense fallback={""}>
                                 <Login />
@@ -34,7 +32,6 @@ class App extends React.Component {
                                 </Route>
                             )
                         }
-
                         <Redirect exact from="/" to="/dashboard" />
 
                         <Route exact path="/dashboard" render={() => (

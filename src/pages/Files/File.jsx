@@ -90,7 +90,7 @@ class File extends React.Component {
                 title: "увидеть",
                 dataIndex: 'hashCode',
                 render:hashCode=>(
-                    <a target='_blank' href={`${host}:${port}`+'/api/client/file/preview/'+hashCode}>увидеть</a>
+                    <a target='_blank' href={`${host}:${port}/api/client/file/preview/${hashCode}`}>увидеть</a>
                 )
             }
         ];

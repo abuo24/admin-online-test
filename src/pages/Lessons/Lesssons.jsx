@@ -75,6 +75,14 @@ class Lesssons extends React.Component {
                 title: "Хэш-код",
                 dataIndex: `hashCode`,
             },
+            {
+                title: "Применение",
+                dataIndex: `preceptAttachment`,
+            },
+            {
+                title: "Задачи",
+                dataIndex: `taskAttachment`,
+            },
         ];
     };
     breadCrumb = () => {
@@ -111,12 +119,16 @@ class Lesssons extends React.Component {
                 res.data.content.map(function (lesson) {
                     let hashCode = lesson.attachment ? lesson.attachment.hashCode : '';
                     let name = lesson.attachment ? lesson.attachment.name : '';
+                    let preceptAttachment = lesson.preceptAttachment? lesson.preceptAttachment.hashCode:"";
+                    let taskAttachment = lesson.taskAttachment? lesson.taskAttachment.hashCode:"";
                     let obj = {
                         id: lesson.id,
                         titleRu: lesson.titleRu,
                         titleUz: lesson.titleUz,
                         name,
-                        hashCode
+                        hashCode,
+                        preceptAttachment,
+                        taskAttachment
                     };
                     listDatas.push(obj);
                 });
@@ -139,6 +151,12 @@ class Lesssons extends React.Component {
     componentDidMount() {
         this.getList();
     }
+    handlePaginationChange = (page) => {
+        this.setState({
+            currentPage: page,
+        }, () => this.getList());
+    };
+
 
     render() {
         const { list, isFetching, totalElements, currentPage, selectedRowKeys, listDatas} = this.state;
@@ -180,8 +198,7 @@ class Lesssons extends React.Component {
                                 key={1}
                                 placeholder="Поиск"
                                 onSearch={value => console.log(value)}
-                                style={{ width: 200 }}
-                            />
+                                style={{ width: 200 }}/>
                         </Space>
                     </Col>
                 </Row>

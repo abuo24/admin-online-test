@@ -14,9 +14,13 @@ const initialParams = {
     hashCode: null,
     titleRu: null,
     titleUz: null,
+    preceptAttachment: null,
+    taskAttachment: null,
     partId: localStorage.getItem("partId")
 };
+
 class ModalForm extends React.Component {
+
     constructor() {
         super();
         this.state = {
@@ -24,14 +28,25 @@ class ModalForm extends React.Component {
             isSubmitting: false,
             params: {...initialParams}
         };
-        // this.currentForm = React.createRef();
+        this.currentForm = React.createRef();
     }
+
+    componentDidMount() {
+        // this.currentForm.current.resetFields()
+    }
+    //
+    // componentWillUnmount() {
+    //     this.currentForm.current.resetFields()
+    // }
 
     onFinish = () => {
         const {params} = this.state;
         const objToSend = {
             ...params,
         };
+        console.log(objToSend);
+        console.log(this.state);
+        console.log(this.props);
         this.setState({isSubmitting: true}, () => {
 
             if (this.props.edit) {
@@ -45,6 +60,7 @@ class ModalForm extends React.Component {
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     // this.currentForm.current.setFieldsValue(initialParams);
+                    this.currentForm.current.resetFields()
                 })
             } else {
                 createLesson(objToSend).then((res) => {
@@ -54,6 +70,7 @@ class ModalForm extends React.Component {
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     // this.currentForm.current.setFieldsValue(initialParams);
+                    this.currentForm.current.resetFields()
                 }).catch(
                     function (error) {
                         // return Promise.reject(error)
@@ -77,14 +94,18 @@ class ModalForm extends React.Component {
         if (edit) {
             const editingObj = this.props.getObj();
             delete editingObj.createAt;
-            const hashCode=editingObj.attachment?editingObj.attachment.hashCode:'';
+            const hashCode = editingObj.attachment ? editingObj.attachment.hashCode : '';
+            const preceptAttachment = editingObj.preceptAttachment ? editingObj.preceptAttachment.hashCode : '';
+            const taskAttachment = editingObj.taskAttachment ? editingObj.taskAttachment.hashCode : '';
             delete editingObj.attachment;
             this.setState({
                 visible: true,
                 params: {
                     ...editingObj,
                     hashCode,
-                    partId:localStorage.getItem("partId")
+                    preceptAttachment,
+                    taskAttachment,
+                    partId: localStorage.getItem("partId")
                 },
             });
         } else {
@@ -92,7 +113,7 @@ class ModalForm extends React.Component {
                 visible: true,
                 params: {
                     ...initialParams,
-                    partId:localStorage.getItem("partId")
+                    partId: localStorage.getItem("partId")
                 }
             });
         }
@@ -102,7 +123,9 @@ class ModalForm extends React.Component {
         this.setState({
             visible: false,
         })
+        this.currentForm.current.resetFields()
     };
+
     handleCKUChangeRu = (event) => {
         const data = event.editor.getData();
         this.setState({
@@ -133,6 +156,8 @@ class ModalForm extends React.Component {
             hashCode,
             titleRu,
             titleUz,
+            preceptAttachment,
+            taskAttachment
         } = this.state.params;
         const {edit} = this.props;
         return (
@@ -158,25 +183,27 @@ class ModalForm extends React.Component {
                     width={800}
                     className="lms-form"
                 >
-                    <Form
-                        name="basic"
-                        layout="vertical"
-                        onFinish={this.onFinish}
-                        ref={this.currentForm}
-                        initialValues={{
-                            descriptionRu,
-                            descriptionUz,
-                            hashCode,
-                            titleRu,
-                            titleUz,
-                        }}
+                    <Form id={"myform"}
+                          name="basic"
+                          layout="vertical"
+                          onFinish={this.onFinish}
+                          ref={this.currentForm}
+                          initialValues={{
+                              descriptionRu,
+                              descriptionUz,
+                              hashCode,
+                              titleRu,
+                              titleUz,
+                              preceptAttachment,
+                              taskAttachment
+                          }}
                     >
                         <Row gutter={[16]}>
                             <Col span={12}>
                                 <Form.Item
                                     label={edit ? (<a target='_blank'
                                                       href={`${host}:${port}` + '/api/client/file/preview/' + hashCode}>
-                                        Изображение учителя</a>) : 'Хэш-коды файлов'}
+                                        Файли видео</a>) : 'Хэш-коды файлов'}
                                     name="hashCode"
                                     rules={[
                                         {
@@ -188,7 +215,51 @@ class ModalForm extends React.Component {
                                     <Input
                                         placeholder={'Hash Code'}
                                         name="hashCode"
+                                        className={"for-clear"}
                                         onChange={this.handleInputChange}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label={edit ? (<a target='_blank'
+                                                      href={`${host}:${port}` + '/api/client/file/preview/' + preceptAttachment}>
+                                        Файли гиди</a>) : 'Хэш-коды файлов гиди'}
+                                    name="preceptHashCode"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Хэш-код гиди!',
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder={'Precept Hash Code'}
+                                        name="preceptHashCode"
+                                        onChange={this.handleInputChange}
+
+                                        className={"for-clear"}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label={edit ? (<a target='_blank'
+                                                      href={`${host}:${port}` + '/api/client/file/preview/' + taskAttachment}>
+                                        Файли задачи</a>) : 'Хэш-коды задача'}
+                                    name="taskHashCode"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Хэш-код!',
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder={'Task Hash Code'}
+                                        name="taskHashCode"
+                                        onChange={this.handleInputChange}
+
                                     />
                                 </Form.Item>
                             </Col>
@@ -207,6 +278,8 @@ class ModalForm extends React.Component {
                                         placeholder={'NameRu'}
                                         name="titleRu"
                                         onChange={this.handleInputChange}
+
+                                        className={"for-clear"}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -223,6 +296,7 @@ class ModalForm extends React.Component {
                                         placeholder={'NameUz'}
                                         name="titleUz"
                                         onChange={this.handleInputChange}
+                                        className={"for-clear"}
                                     />
                                 </Form.Item>
                             </Col>

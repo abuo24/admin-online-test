@@ -97,7 +97,11 @@ class Category extends React.Component {
     componentDidMount() {
         this.getList();
     }
-
+    handlePaginationChange = (page) => {
+        this.setState({
+            currentPage: page,
+        }, () => this.getList());
+    };
     render() {
         const { list, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
         const columns = this.renderColumns();
@@ -148,6 +152,13 @@ class Category extends React.Component {
                         <Skeleton active />
                     ) : (
                             <Table
+                                pagination={{
+                                    current: currentPage,
+                                    total: totalElements,
+                                    pageSize:10,
+                                    onChange: this.handlePaginationChange,
+                                    showTotal: (totalElements) => `ВСЕ: ${totalElements}`,
+                                }}
                                 tableLayout="fixed"
                                 bordered
                                 size="small"

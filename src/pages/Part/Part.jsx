@@ -119,6 +119,11 @@ class Part extends React.Component {
             }
         })
     };
+    handlePaginationChange = (page) => {
+        this.setState({
+            currentPage: page,
+        }, () => this.getList());
+    };
 
     componentDidMount() {
         this.getList();

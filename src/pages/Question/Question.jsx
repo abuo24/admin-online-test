@@ -1,45 +1,38 @@
 import React from 'react';
-import {Row, Col, Input, Table, Skeleton, Space, Button} from "antd";
+import {Row, Col, Input, Table, Skeleton, Space} from "antd";
 import {connect} from 'react-redux';
 
 import ModalForm from "./components/ModalForm";
 import DeleteConfirm from "../../commonComponents/DeleteConfirm";
+import {paginationDefaultItemCount} from "../../constants";
 
 import "../pages.scss";
-import moment from "moment";
-import {deletePayment, getPayment} from "../../server/config/admin/UserInfo";
-import VerifiedOutlined from "@ant-design/icons/lib/icons/VerifiedOutlined";
-import AddressForm from "./components/AddressForm";
-import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
+import {Link} from "react-router-dom";
+import {deleteCourse, getCourse, getCourses} from "../../server/config/admin/Course";
+import {getTeachers} from "../../server/config/admin/Teacher";
+import {getCategories} from "../../server/config/admin/Category";
+import {deleteQuestion, getQuestion} from "../../server/config/admin/Question";
 
 const {Search} = Input;
 
-class UserInfo extends React.Component {
+class Question extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: localStorage.getItem("userId"),
+            // courseId: null,
+            // module: false,
             list: [],
-            visible:false,
             selectedRowKeys: [],
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
+            courses: [],
+            listDatas: [],
+            teachers: [],
             categories: []
         }
     }
-    breadCrumb = () => {
-        return [
-            {
-                pathUrl: "/dashboard",
-                pathName: `Главная`,
-            },
-            {
-                pathUrl: "/userInfo",
-                pathName: `Информация`,
-            }
-        ];
-    };
+
     getCheckedObj = () => {
         const {list, selectedRowKeys} = this.state;
         let newObj = {};
@@ -65,12 +58,9 @@ class UserInfo extends React.Component {
             selectedRowKeys: newList,
         });
     };
-
-    handleClickedId(id) {
-        // const id = record['id'];
-        localStorage.setItem("courseId", id);
+    handleClickedId(id){
+        localStorage.setItem("questionId",id);
     };
-
     onSelectedRowKeysChange = (selectedRowKeys) => {
         this.setState({selectedRowKeys});
     };
@@ -78,57 +68,74 @@ class UserInfo extends React.Component {
     renderColumns = () => {
         return [
             {
-                title: " Ф.И.О (Русский)",
-                dataIndex: 'fullName',
+                title: " Название курса (Русский)",
+                dataIndex: 'nameRu',
             },
             {
-                title: " Учебный курс",
-                dataIndex: 'course',
+                title: " Название курса (Русский)",
+                dataIndex: 'nameUz',
+            }, {
+                title: " Название курса (Русский)",
+                dataIndex: 'correctAnswer',
+            },{
+                title: " Название курса (Русский)",
+                dataIndex: 'subject',
             },
             {
-                title: "Дата создания",
-                dataIndex: 'createAt',
+                title: "3 blok",
+                dataIndex: 'id',
+                render: id =>
+                    <Link to={`/answer/${id}`} onClick={()=>this.handleClickedId(id)}>Answers</Link>
             },
         ];
     };
     getList = () => {
-        const {currentPage, userId} = this.state;
-        getPayment(userId).then((res) => {
-            if (res && Array.isArray(res.data)) {
-                let list = [];
-                res.data.map(function (payment) {
-                    let fullName = payment.userReq ? (payment.userReq.firstName + '/' + payment.userReq.lastName) : '';
-                    let course = payment.courseReq ? payment.courseReq.titleRu : '';
-                    let obj = {
-                        id: payment.id,
-                        fullName,
-                        course,
-                        modules: payment.modules,
-                        createAt:moment(payment.createAt).format("YYYY-MM-DD / HH:mm:ss")
-                    };
-                    list.push(obj);
+        const {currentPage} = this.state;
+        const current = currentPage - 1;
+        if (current >= 0) {
+            {
+                getQuestion(current, paginationDefaultItemCount).then((res) => {
+                    if (res &&res.data&&res.data.data&&res.data.data.questions&& Array.isArray(res.data.data.questions)) {
+                        let listDatas = [];
+
+                        res.data.data.questions.map(function (course) {
+                            let obj = {
+                                id: course.id,
+                                nameRu: course.questionRu,
+                                nameUz: course.questionUz,
+                                correctAnswer: course.questionUz,
+                                subject: course.subjects.nameRu,
+                            };
+
+                            listDatas.push(obj);
+                        });
+                        this.setState({
+                            isFetching: false,
+                            selectedRowKeys: [],
+                            totalElements: res.data.data.totalItems,
+                            list: res.data.data.questions,
+                            listDatas: listDatas
+                        })
+                    } else {
+                        this.setState({
+                            selectedRowKeys: [],
+                            isFetching: false,
+                        })
+                    }
                 });
-                this.setState({
-                    isFetching: false,
-                    selectedRowKeys: [],
-                    list,
-                })
-            } else {
-                this.setState({
-                    selectedRowKeys: [],
-                    isFetching: false,
-                })
             }
-        });
+        }
+        getCourses().then(res=>this.setState({
+            ...this.state,
+            courses: res.data&&res.data.data
+        })).catch(err=>console.log(err));
     };
     getCollections = () => {
-        // getCategoriesList().then(res => {
-        //     this.setState({
-        //         categories: res.data
-        //     })
-        // });
+
         this.getList();
+
     };
+
     handlePaginationChange = (page) => {
         this.setState({
             currentPage: page,
@@ -138,22 +145,20 @@ class UserInfo extends React.Component {
     componentDidMount() {
         this.getCollections();
     }
-    showModal=(value)=>{
-        this.setState({
-            visible:value
-        })
-    };
 
     render() {
         const {
-            userId,
             list,
-            selectedRowKeys,
             isFetching,
-            categories,
             totalElements,
             currentPage,
-            visible
+            selectedRowKeys,
+            module,
+            courseId,
+            teachers,
+            listDatas,
+            categories,
+            courses
         } = this.state;
         const columns = this.renderColumns();
 
@@ -161,10 +166,10 @@ class UserInfo extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectedRowKeysChange,
         };
-        const itemList = this.breadCrumb();
 
-        const isMultiple = selectedRowKeys.length > 1 ? true : false;
-        const isSingle = selectedRowKeys.length === 1 ? true : false;
+
+        const isMultiple = selectedRowKeys.length > 0;
+        const isSingle = selectedRowKeys.length === 1;
         const {edit} = this.props;
         return (
             <div className="bg-white site-border">
@@ -174,26 +179,23 @@ class UserInfo extends React.Component {
                             <h3>
                                 Список курсов
                             </h3>
+
                         </Space>
                     </Col>
                     <Col>
                         <Space>
-                            <BreadcrumbCourse itemList={itemList}/>
-                            <Button type="primary" onClick={()=>this.showModal(true)} title={"Адрес"}>
-                                <VerifiedOutlined />
-                            </Button>
-                            <AddressForm visible={visible} showModal={this.showModal}/>
-                            <ModalForm categories={categories} getList={this.getList}/>
+                            <ModalForm courses={courses} list={list} categories={categories} getList={this.getList}/>
+
                             {
                                 isSingle && (
-                                    <ModalForm edit categories={categories} getList={this.getList}
+                                    <ModalForm courses={courses} list={list}  edit categories={categories} teachers={teachers} getList={this.getList}
                                                getObj={this.getCheckedObj}/>
                                 )
                             }
                             {
-                                isSingle && (
-                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList}
-                                                   delete={deletePayment}/>
+                                isMultiple && (
+                                    <DeleteConfirm list={list}  selectedIds={selectedRowKeys} getList={this.getList}
+                                                   delete={deleteQuestion}/>
                                 )
                             }
                             <Search
@@ -205,6 +207,7 @@ class UserInfo extends React.Component {
                         </Space>
                     </Col>
                 </Row>
+
                 {
                     isFetching ? (
                         <Skeleton active/>
@@ -222,7 +225,7 @@ class UserInfo extends React.Component {
                             size="small"
                             rowSelection={rowSelection}
                             columns={columns}
-                            dataSource={list}
+                            dataSource={listDatas}
                             rowKey="id"
                             scroll={{x: 1000}}
                             onRow={(record) => {
@@ -230,6 +233,9 @@ class UserInfo extends React.Component {
                                     onClick: () => {
                                         this.handleClickedRow(record);
                                     },
+                                    // onDoubleClick: () => {
+                                    //     this.handleClickedDouble(record);
+                                    // }
                                 };
                             }}
                         />
@@ -247,4 +253,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps)(UserInfo);
+export default connect(mapStateToProps)(Question);

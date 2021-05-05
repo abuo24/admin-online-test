@@ -1,29 +1,27 @@
 import React from 'react';
-import { Row, Col, Input, Table, Skeleton, Space} from "antd";
-import { connect } from 'react-redux';
+import { Row, Col, Input, Table, Skeleton, Space } from "antd";
+import ModalForm from "./components/ModalForm";
+import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 
 import "../pages.scss";
-import {paginationDefaultItemCount} from "../../constants";
+import {deleteModule, getModule} from "../../server/config/admin/Module";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
-import {deleteLesson, getLesson} from "../../server/config/admin/Lessons";
-import ModalForm from "../Lessons/components/ModalForm";
-import DeleteConfirm from "../../commonComponents/DeleteConfirm";
-import {getPart} from "../../server/config/admin/Part";
+import {Link} from "react-router-dom";
+import moment from "moment";
+import {deleteUser} from "../../server/config/admin/Users";
 
 const { Search } = Input;
 
-class Lesssons extends React.Component {
-    constructor() {
-        super();
+class Answer extends React.Component {
+    constructor(props) {
+        super(props);
         this.state = {
             list: [],
-            listDatas:[],
             selectedRowKeys: [],
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
-            partId: localStorage.getItem("partId"),
-            moduleId: localStorage.getItem("moduleId")
+            courseId: localStorage.getItem("groupId"),
         }
     }
     getCheckedObj = () => {
@@ -37,7 +35,6 @@ class Lesssons extends React.Component {
         });
         return newObj;
     };
-
     handleClickedRow = (record) => {
         let newList = [];
         const { selectedRowKeys } = this.state;
@@ -53,23 +50,8 @@ class Lesssons extends React.Component {
             selectedRowKeys: newList,
         })
     };
-
     onSelectedRowKeysChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
-    };
-
-    renderColumns = () => {
-
-        return [
-            {
-                title: "Наименование (русский)",
-                dataIndex: `nameRu`,
-            },
-            {
-                title: "Наименование (узбек)",
-                dataIndex: `nameUz`,
-            }
-        ];
     };
     breadCrumb = () => {
         return [
@@ -78,62 +60,76 @@ class Lesssons extends React.Component {
                 pathName: `Главная`,
             },
             {
-                pathUrl: "/course",
+                pathUrl: "/category",
                 pathName: `Курси`,
-            },
-            {
-                pathUrl: "/part",
-                pathName: `Часть`,
-            },
-            {
-                pathUrl: "/lessons",
-                pathName: `Уроки`,
             }
         ];
     };
-
+    renderColumns = () => {
+        return [
+            {
+                title: " Наименование (русский)",
+                dataIndex: `fullName`,
+            },
+            {
+                title: "Наименование (узбек)",
+                dataIndex: `phoneNumber`,
+            },
+            {
+                title: "Цена",
+                dataIndex: `createAt`,
+            }
+        ];
+    };
+    handleClickedId=(id)=>{
+        localStorage.setItem("moduleId", id);
+    };
     getList = () => {
-        const { currentPage,moduleId, partId} = this.state;
+        const { currentPage, courseId} = this.state;
         const current = currentPage - 1;
-        getPart(moduleId,partId).then((res) => {
-            if (res&&Array.isArray(res.data.data)) {
-                let listDatas = [];
-                res.data.data.map(function (lesson) {
-                    let obj = {
-                        id: lesson.id,
-                        nameRu: lesson.nameRu,
-                        nameUz: lesson.nameUz,
-                    };
-                    listDatas.push(obj);
-                });
+        getModule(courseId).then((res) => {
+            if (res&&Array.isArray(res.data.data.users)) {
+
                 this.setState({
                     isFetching: false,
                     selectedRowKeys: [],
-                    totalElements: res.data.data.length,
-                    list: res.data.data,
-                    listDatas
+                    totalElements: res.data.data.totalItems,
+                    list: res.data.data.users,
+                })
+                let list = res.data.data.users;
+                let listColumns=[];
+                list.map(function (u) {
+                    let obj = {
+                        id: u.id,
+                        fullName: u.first_name+' '+u.last_name,
+                        phoneNumber: u.phoneNumber,
+                        createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
+                    };
+                    listColumns.push(obj);
+                });
+                this.setState({
+                    listColumns
                 })
             } else {
                 this.setState({
                     selectedRowKeys: [],
-                    isFetching: false,
+                    isFetching: false
                 })
             }
         })
     };
 
-    componentDidMount() {
-        this.getList();
-    }
     handlePaginationChange = (page) => {
         this.setState({
             currentPage: page,
         }, () => this.getList());
     };
 
-
+    componentDidMount=()=>{
+        this.getList();
+    };
     render() {
-        const { list, isFetching, totalElements, currentPage, selectedRowKeys, listDatas} = this.state;
+        const { listColumns, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
         const columns = this.renderColumns();
         const itemList = this.breadCrumb();
 
@@ -145,24 +141,34 @@ class Lesssons extends React.Component {
         const isMultiple = selectedRowKeys.length > 0 ? true : false;
         const isSingle = selectedRowKeys.length === 1 ? true : false;
         const {  edit } = this.props;
-
         return (
             <div className="bg-white site-border">
                 <Row align="middle" justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <h3>
-                            Уроки
+                            Модули
                         </h3>
                     </Col>
                     <Col>
                         <Space>
                             <BreadcrumbCourse itemList={itemList}/>
-
+                            <ModalForm getList={this.getList} />
+                            {
+                                isSingle && (
+                                    <ModalForm edit getList={this.getList} getObj={this.getCheckedObj} />
+                                )
+                            }
+                            {
+                                isMultiple && (
+                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deleteUser} />
+                                )
+                            }
                             <Search
                                 key={1}
                                 placeholder="Поиск"
                                 onSearch={value => console.log(value)}
-                                style={{ width: 200 }}/>
+                                style={{ width: 200 }}
+                            />
                         </Space>
                     </Col>
                 </Row>
@@ -184,7 +190,7 @@ class Lesssons extends React.Component {
                                 size="small"
                                 rowSelection={rowSelection}
                                 columns={columns}
-                                dataSource={listDatas}
+                                dataSource={listColumns}
                                 rowKey="id"
                                 scroll={{ x: 700 }}
                                 onRow={(record) => {
@@ -201,11 +207,12 @@ class Lesssons extends React.Component {
         );
     }
 }
-
-const mapStateToProps = (state) => {
-    return {
-
-    }
-};
-
-export default connect(mapStateToProps)(Lesssons);
+export default Answer;
+//
+// const mapStateToProps = (state) => {
+//     return {
+//
+//     }
+// };
+//
+// export default connect(mapStateToProps)(Answer);

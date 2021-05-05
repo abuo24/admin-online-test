@@ -7,6 +7,8 @@ import "../pages.scss";
 import {deleteModule, getModule} from "../../server/config/admin/Module";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
 import {Link} from "react-router-dom";
+import moment from "moment";
+import {deleteUser} from "../../server/config/admin/Users";
 
 const { Search } = Input;
 
@@ -19,7 +21,7 @@ class Module extends React.Component {
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
-            courseId: localStorage.getItem("courseId"),
+            courseId: localStorage.getItem("groupId"),
         }
     }
     getCheckedObj = () => {
@@ -58,12 +60,8 @@ class Module extends React.Component {
                 pathName: `Главная`,
             },
             {
-                pathUrl: "/course",
+                pathUrl: "/category",
                 pathName: `Курси`,
-            },
-            {
-                pathUrl: "/module",
-                pathName: `Модули`,
             }
         ];
     };
@@ -71,22 +69,16 @@ class Module extends React.Component {
         return [
             {
                 title: " Наименование (русский)",
-                dataIndex: `nameRu`,
+                dataIndex: `fullName`,
             },
             {
                 title: "Наименование (узбек)",
-                dataIndex: `nameUz`,
+                dataIndex: `phoneNumber`,
             },
             {
                 title: "Цена",
-                dataIndex: `price`,
-            },
-            {
-                title: " Часть",
-                dataIndex: 'id',
-                render: id =>
-                    <Link to={`/part/${id}`} onClick={()=>this.handleClickedId(id)}>Часть</Link>
-            },
+                dataIndex: `createAt`,
+            }
         ];
     };
     handleClickedId=(id)=>{
@@ -96,17 +88,32 @@ class Module extends React.Component {
         const { currentPage, courseId} = this.state;
         const current = currentPage - 1;
         getModule(courseId).then((res) => {
-            if (res&&Array.isArray(res.data)) {
+            if (res&&Array.isArray(res.data.data.users)) {
+
                 this.setState({
                     isFetching: false,
                     selectedRowKeys: [],
-                    // totalElements: res.data.totalElements,
-                    list: res.data,
+                    totalElements: res.data.data.totalItems,
+                    list: res.data.data.users,
+                })
+                let list = res.data.data.users;
+                let listColumns=[];
+                list.map(function (u) {
+                    let obj = {
+                        id: u.id,
+                        fullName: u.first_name+' '+u.last_name,
+                        phoneNumber: u.phoneNumber,
+                        createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
+                    };
+                    listColumns.push(obj);
+                });
+                this.setState({
+                    listColumns
                 })
             } else {
                 this.setState({
                     selectedRowKeys: [],
-                    isFetching: false,
+                    isFetching: false
                 })
             }
         })
@@ -122,7 +129,7 @@ class Module extends React.Component {
         this.getList();
     };
     render() {
-        const { list, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
+        const { listColumns, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
         const columns = this.renderColumns();
         const itemList = this.breadCrumb();
 
@@ -153,7 +160,7 @@ class Module extends React.Component {
                             }
                             {
                                 isMultiple && (
-                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deleteModule} />
+                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deleteUser} />
                                 )
                             }
                             <Search
@@ -183,7 +190,7 @@ class Module extends React.Component {
                                 size="small"
                                 rowSelection={rowSelection}
                                 columns={columns}
-                                dataSource={list}
+                                dataSource={listColumns}
                                 rowKey="id"
                                 scroll={{ x: 700 }}
                                 onRow={(record) => {
@@ -208,4 +215,4 @@ export default Module;
 //     }
 // };
 //
-// export default connect(mapStateToProps)(Module);
+// export default connect(mapStateToProps)(Answer);

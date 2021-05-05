@@ -11,12 +11,9 @@ import CKEditor from "ckeditor4-react";
 import {createTeacher, updateTeacher} from "../../../server/config/admin/Teacher";
 
 const initialParams = {
-    firstName: null,
-    lastName: null,
+    first_name: null,
+    last_name: null,
     phoneNumber: null,
-    accountNonLocked:null,
-    hashCode: null,
-    username: null,
     password: null,
     telegram: null,
     instagram: null,
@@ -53,7 +50,6 @@ class ModalForm extends React.Component {
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     console.log(initialParams);
-                    // this.currentForm.current.setFieldsValue(initialParams);
                 }).catch(e=>{
                     message.success('Request failed!');
                 })):(updateTeacher(userId, objToSend).then((res) => {
@@ -120,7 +116,6 @@ class ModalForm extends React.Component {
                 visible: true,
                 params: {
                     ...editingObj,
-                    hashCode,
                 },
             });
         } else {
@@ -173,8 +168,8 @@ class ModalForm extends React.Component {
         } = this.state;
 
         const {
-            firstName,
-            lastName,
+            first_name,
+            last_name,
             phoneNumber,
             hashCode,
             username,
@@ -217,43 +212,24 @@ class ModalForm extends React.Component {
                         onFinish={this.onFinish}
                         ref={this.currentForm}
                         initialValues={{
-                            firstName,
-                            lastName,
+                            first_name,
+                            last_name,
                             phoneNumber,
-                            hashCode,
-                            username,
                             password,
                             telegram,
                             instagram,
                             facebook,
                             aboutUz,
-                            aboutRu,
-                            accountNonLocked
+                            aboutRu
                         }}
                     >
-                        <h3>{userType==='teacher'?"Информация о Учитель":"Информация о Студент"}</h3>
+                        <h3>{"Информация о Студент"}</h3>
                         <Row gutter={[16]}>
                             <Col span={12}>
-                                <Form.Item
-                                    label={edit ? (<a target='_blank'
-                                                      href={`${host}:${port}` + '/api/client/file/preview/' + hashCode}>
-                                        Изображение учителя</a>) : 'Хэш-коды файлов'}
-                                    name="hashCode"
-                                    rules={[
-                                        {
-                                            message: 'Хэш-код!',
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder={'Hash Code'}
-                                        name="hashCode"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
+
                                 <Form.Item
                                     label={"Имя"}
-                                    name="firstName"
+                                    name="first_name"
                                     rules={[
                                         {
                                             required: true,
@@ -263,13 +239,13 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Имя"}
-                                        name="firstName"
+                                        name="first_name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
                                     label={"Фамилия"}
-                                    name="lastName"
+                                    name="last_name"
                                     rules={[
                                         {
                                             required: true,
@@ -279,7 +255,7 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Фамилия"}
-                                        name="lastName"
+                                        name="last_name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
@@ -301,26 +277,7 @@ class ModalForm extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
-                                <Form.Item
-                                    label={"Эл. адрес"}
-                                    name="username"
-                                    rules={[
-                                        {
-                                            type: 'email',
-                                            message: 'The input is not valid E-mail!',
-                                        },
-                                        {
-                                            required: true,
-                                            message: `Эл. адрес!`,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder={"Эл. адрес"}
-                                        name="username"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
+
                                 <Form.Item
                                     label={"Парол"}
                                     name="password"
@@ -336,116 +293,9 @@ class ModalForm extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
-                                <Checkbox
-                                    onChange={this.handleCheckboxChange}
-                                    defaultChecked={accountNonLocked}>
-                                    Актив
-                                </Checkbox>
-                            </Col>
-                        </Row>
-                        <Row gutter={[16]}>
-                            <Col span={24}>
-                                {userType==='teacher'?
-                                    (<div>
-                                        <Form.Item
-                                            label={" Facebook"}
-                                            name="facebook"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: `Facebook!`,
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                placeholder={" Facebook"}
-                                                name="facebook"
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label={" Telegram"}
-                                            name="telegram"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: `telegram!`,
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                placeholder={" Telegram"}
-                                                name="telegram"
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label={" Instagram"}
-                                            name="instagram"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: `Instagram!`,
-                                                },
-                                            ]}
-                                        >
-                                            <Input
-                                                placeholder={" Instagram"}
-                                                name="instagram"
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Item>
-                                    </div>):''}
-                            </Col>
-                        </Row>
-                        {userType==='teacher'?
-                            (<Row gutter={[16]}>
-                            <Col span={24}>
-                                <Form.Item
-                                    label={"О учителе (русский)"}
-                                    name="aboutRu"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `О учителе (русский)!`,
-                                        },
-                                    ]}
-                                >
-                                    <CKEditor
-                                        style={{minHeight: "400px"}}
-                                        config={{
-                                            allowedContent :true,
-                                            extraPlugins : 'autogrow,sourcedialog',
-                                            removePlugins : 'sourcearea'
-                                        }}
-                                        data={`${aboutRu}`}
-                                        onChange={this.handleCKUChangeRu}
-                                    />
-                                </Form.Item>
 
-                                <Form.Item
-                                    label={"О учителе (узбек)"}
-                                    name="aboutUz"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `О учителе (узбек)!`,
-                                        },
-                                    ]}
-                                >
-                                    <CKEditor
-                                        style={{minHeight: "400px"}}
-                                        config={{
-                                            allowedContent :true,
-                                            extraPlugins : 'autogrow,sourcedialog',
-                                            removePlugins : 'sourcearea'
-                                        }}
-                                        data={`${aboutUz}`}
-                                        onChange={this.handleCKUChangeUz}
-                                    />
-                                </Form.Item>
                             </Col>
-                        </Row>):''}
+                        </Row>
                         <Row className="form-footer" justify="end" gutter={[8]}>
                             <Col>
                                 <Form.Item>

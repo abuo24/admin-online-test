@@ -1,9 +1,17 @@
 import { HttpRequestHub } from '../../HttpRequestHub';
 
-export const getParts = (page=0, size=10, moduleId) => {
+export const getParts = ( id) => {
     const config = {
         method: 'GET',
-        url: `/api/superAdmin/part/getPage/${moduleId}?page=${page}&size=${size}`,
+        url: `/api/client/subject/${id}`,
+    };
+    return HttpRequestHub(config);
+};
+
+export const getPart = ( id,psid) => {
+    const config = {
+        method: 'GET',
+        url: `/api/client/subjects/${id}?parentSecondId=${psid}`,
     };
     return HttpRequestHub(config);
 };

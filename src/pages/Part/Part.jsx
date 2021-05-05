@@ -10,6 +10,7 @@ import {paginationDefaultItemCount} from "../../constants";
 import {deletePart, getParts} from "../../server/config/admin/Part";
 import {Link} from "react-router-dom";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
+import moment from "moment";
 
 const { Search } = Input;
 
@@ -22,7 +23,7 @@ class Part extends React.Component {
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
-            moduleId: localStorage.getItem("moduleId")
+            moduleId: localStorage.getItem("subjectId")
         }
     }
     getCheckedObj = () => {
@@ -68,6 +69,7 @@ class Part extends React.Component {
                 title: "Наименование (узбек)",
                 dataIndex: `nameUz`,
             },
+
             {
                 title: " Уроки",
                 dataIndex: 'id',
@@ -78,6 +80,7 @@ class Part extends React.Component {
     };
     handleClickedId=(id)=>{
         localStorage.setItem("partId", id);
+        localStorage.setItem("moduleId", this.state.moduleId);
     };
     breadCrumb = () => {
         return [
@@ -90,10 +93,6 @@ class Part extends React.Component {
                 pathName: `Курси`,
             },
             {
-                pathUrl: "/module",
-                pathName: `Модули`,
-            },
-            {
                 pathUrl: "/part",
                 pathName: `Часть`,
             }
@@ -103,13 +102,27 @@ class Part extends React.Component {
     getList = () => {
         const { currentPage, moduleId} = this.state;
         const current = currentPage - 1;
-        getParts(current, paginationDefaultItemCount, moduleId).then((res) => {
-            if (res&&Array.isArray(res.data.content)) {
+        getParts(moduleId).then((res) => {
+            console.log(res)
+            if (res&&Array.isArray(res.data&&res.data.data&&res.data.data&&res.data.data.parentsFirst)) {
                 this.setState({
                     isFetching: false,
                     selectedRowKeys: [],
-                    totalElements: res.data.totalElements,
-                    list: res.data.content,
+                    totalElements: res.data&&res.data.data&&res.data.data.parentsFirst.length,
+                    list: res.data.data.parentsFirst,
+                })
+                let list = res.data.data.parentsFirst;
+                let listColumns=[];
+                list.map(function (u) {
+                    let obj = {
+                        id: u.id,
+                        nameUz: u.nameUz,
+                        nameRu: u.nameRu,
+                    };
+                    listColumns.push(obj);
+                });
+                this.setState({
+                    listColumns
                 })
             } else {
                 this.setState({
@@ -130,7 +143,7 @@ class Part extends React.Component {
     }
 
     render() {
-        const { list, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
+        const { list,listColumns, isFetching, totalElements, currentPage, selectedRowKeys } = this.state;
         const columns = this.renderColumns();
         const itemList = this.breadCrumb();
 
@@ -153,18 +166,6 @@ class Part extends React.Component {
                     <Col>
                         <Space>
                             <BreadcrumbCourse itemList={itemList}/>
-                            <ModalForm getList={this.getList} />
-
-                            {
-                                isSingle && (
-                                    <ModalForm edit getList={this.getList} getObj={this.getCheckedObj} />
-                                )
-                            }
-                            {
-                                isMultiple && (
-                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deletePart} />
-                                )
-                            }
                             <Search
                                 key={1}
                                 placeholder="Поиск"
@@ -180,28 +181,15 @@ class Part extends React.Component {
                         <Skeleton active />
                     ) : (
                             <Table
-                                pagination={{
-                                    current: currentPage,
-                                    total: totalElements,
-                                    pageSize:10,
-                                    onChange: this.handlePaginationChange,
-                                    showTotal: (totalElements) => `ВСЕ: ${totalElements}`,
-                                }}
+
                                 tableLayout="fixed"
                                 bordered
                                 size="small"
                                 rowSelection={rowSelection}
                                 columns={columns}
-                                dataSource={list}
+                                dataSource={listColumns}
                                 rowKey="id"
                                 scroll={{ x: 700 }}
-                                onRow={(record) => {
-                                    return {
-                                        onClick: () => {
-                                            this.handleClickedRow(record);
-                                        },
-                                    };
-                                }}
                             />
                         )
                 }

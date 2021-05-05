@@ -5,12 +5,15 @@ import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 import "../../pages.scss";
 import {createFollower, updateFollower} from "../../../server/config/admin/Followers";
+import {getCourses} from "../../../server/config/admin/Course";
+import {Option} from "antd/lib/mentions";
 
 const initialParams = {
-    fullName: null,
-    email: null,
-    phoneNumber:null,
-    interest: null,
+    name: null,
+    code: null,
+    subjectFirst: null,
+    subjectSecond: null,
+    subjectThird: null
 };
 
 class ModalForm extends React.Component {
@@ -43,7 +46,6 @@ class ModalForm extends React.Component {
                         this.setState({ isSubmitting: false, visible: false });
                     }
                     this.props.getList();
-                    // this.currentForm.current.setFieldsValue(initialParams);
                 }).catch(e=>{
                     message.success('Request failed!');
                 })
@@ -90,29 +92,54 @@ class ModalForm extends React.Component {
             });
         }
     };
+    handleSelectChange = (name, value) => {
+        console.log(value)
+        this.setState({
+            ...this.state,
+            params: {
+                ...this.state.params,
+                [name]: value,
+            }
+        })
+    };
     handleCancel = () => {
         this.setState({
             visible: false,
         })
     };
+    getSubjects = () => {
+        getCourses()
+            .then(res=>{
+                if (res) {
+                    this.setState({ isSubmitting: false, visible: false, list: res.data.data });
+                    res.data.data.success? message.success("succes"):message.error(res.data.data.message);
+                } else {
+                    this.setState({ isSubmitting: false, visible: false });
+                }
+            })
+            .catch(err=>console.log(err))
+    }
 
     componentDidMount() {
         const {edit}=this.props;
         if (edit){
-
         }
+        this.getSubjects();
     }
 
     render() {
         const {
             isSubmitting,
+            list
         } = this.state;
 
         const {
-            fullName,
-            email,
-            phoneNumber,
-            interest,
+            name,
+            code,
+            subjectFirst,
+            subjectSecond,
+            subjectThird,
+
         } = this.state.params;
 
         const { edit } = this.props;
@@ -146,10 +173,11 @@ class ModalForm extends React.Component {
                         onFinish={this.onFinish}
                         ref={this.currentForm}
                         initialValues={{
-                            fullName,
-                            email,
-                            phoneNumber,
-                            interest,
+                            name,
+                            code,
+                            subjectFirst,
+                            subjectSecond,
+                            subjectThird
                         }}
                     >
                         <h3>Информация о Подписчики</h3>
@@ -158,7 +186,7 @@ class ModalForm extends React.Component {
                             <Col span={24}>
                                 <Form.Item
                                     label={"Полное имя"}
-                                    name="fullName"
+                                    name="name"
                                     rules={[
                                         {
                                             required: true,
@@ -168,14 +196,14 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Полное имя"}
-                                        name="fullName"
+                                        name="name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
                                     label={"Эл. почта"}
-                                    name="email"
+                                    name="code"
                                     rules={[
                                         {
                                             required: true,
@@ -185,41 +213,90 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Эл. почта"}
-                                        name="email"
+                                        name="code"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    label={"Телефонный номер"}
-                                    name="phoneNumber"
+                                    label={`Блокь 1 предметы`}
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Телефонный номер!`,
+                                            message: `Категория!`,
                                         },
                                     ]}
                                 >
-                                    <Input
-                                        placeholder={"Телефонный номер"}
-                                        name="phoneNumber"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label={"Интерес"}
-                                    name="interest"
+                                    <Select
+                                        showSearch
+                                        name={"subjectFirst"}
+                                        placeholder={`Блокь 1 предметы`}
+                                        onChange={(value) => this.handleSelectChange(`subjectFirst`, value)}
+                                        defaultValue={subjectFirst&&subjectFirst.id?subjectFirst.id:null}
+                                    >
+                                        {
+                                            Array.isArray(list) ? list.map((role) => (
+                                                <Option
+                                                    value={role.id} key={role.id}>
+                                                    {role['nameRu'] + "/" + role['nameUz']}
+                                                </Option>
+                                            )) : ''
+                                        }
+                                    </Select>
+
+                                </Form.Item>  <Form.Item
+                                    label={`Блокь 2 предметы`}
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Интерес!`,
+                                            message: `Категория!`,
                                         },
                                     ]}
                                 >
-                                    <Input
-                                        placeholder={"Интерес"}
-                                        name="interest"
-                                        onChange={this.handleInputChange}
-                                    />
+                                    <Select
+                                        showSearch
+                                        name={"subjectSecond"}
+                                        placeholder={`Блокь 3 предметы`}
+                                        defaultValue={subjectSecond&&subjectSecond.id?subjectSecond.id:null}
+                                        onChange={(value) => this.handleSelectChange(`subjectSecond`, value)}
+                                    >
+                                        {
+                                            Array.isArray(list) ? list.map((role) => (
+                                                <Option
+                                                    // disabled={id === role.id || subjectsId.find(i => i === role.id) != null}
+                                                    value={role.id} key={role.id}>
+                                                    {role['nameRu'] + "/" + role['nameUz']}
+                                                </Option>
+                                            )) : ''
+                                        }
+                                    </Select>
+
+                                </Form.Item><Form.Item
+                                    label={`Блокь 1 предметы`}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: `Категория!`,
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        showSearch
+                                        name={"subjectThird"}
+                                        placeholder={`Блокь 3 предметы`}
+                                        onChange={(value) => this.handleSelectChange(`subjectThird`, value)}
+                                        defaultValue={subjectSecond&&subjectSecond.id?subjectSecond.id:null}
+                                    >
+                                        {
+                                            Array.isArray(list) ? list.map((role) => (
+                                                <Option
+                                                    // disabled={id === role.id || subjectsId.find(i => i === role.id) != null}
+                                                    value={role.id} key={role.id}>
+                                                    {role['nameRu'] + "/" + role['nameUz']}
+                                                </Option>
+                                            )) : ''
+                                        }
+                                    </Select>
+
                                 </Form.Item>
                             </Col>
                         </Row>

@@ -3,7 +3,7 @@ import { HttpRequestHub } from '../../HttpRequestHub';
 export const getModule = (courseId) => {
     const config = {
         method: 'GET',
-        url: `/api/superAdmin/module/getAll/${courseId}`,
+        url: `/api/admin/users/${courseId}`,
     };
     return HttpRequestHub(config);
 };

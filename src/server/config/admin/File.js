@@ -3,7 +3,7 @@ import {post,put} from "axios";
 import {host, port, token} from "../../host";
 
 export const fileUpload=(file, auth=true)=>{
-    const url = `${host}:${port}/api/superAdmin/file/save?auth=${auth}`;
+    const url = `${host}:${port}/api/admin/upload`;
     const formData = new FormData();
     formData.append('file',file);
     const config = {
@@ -31,14 +31,14 @@ export const fileUpload=(file, auth=true)=>{
 export const getFiles = (page = 0, size = 10) => {
     const config = {
         method: 'GET',
-        url: `/api/superAdmin/file/getPage?page=${page}&size=${size}`,
+        url: `/api/admin/files?page=${page}&size=${size}`,
     };
     return HttpRequestHub(config);
 };
 export const deleteFile = (hashCode) => {
     const config = {
         method: 'DELETE',
-        url: `/api/superAdmin/file/delete/${hashCode}`,
+        url: `/api/admin/file/${hashCode}`,
     };
     return HttpRequestHub(config);
 };

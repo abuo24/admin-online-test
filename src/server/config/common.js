@@ -9,10 +9,10 @@ export const getUserInfo = () => {
     return HttpRequestHub(config);
 };
 
-export const getFile = (id) => {
+export const getFile = (hashId) => {
     const config = {
         method: 'GET',
-        url: `/api/auth/file/${id}`,
+        url: `/api/client/file/preview/${hashId}`,
     };
     return HttpRequestHub(config);
 };

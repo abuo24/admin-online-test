@@ -64,21 +64,26 @@ class Followers extends React.Component {
         return [
             {
                 title:"Полное имя",
-                dataIndex: 'fullName',
+                dataIndex: 'name',
             },
 
             {
                 title:" Эл. почта",
-                dataIndex: 'email',
+                dataIndex: 'code',
             },
             {
                 title:"Телефонный номер",
-                dataIndex: 'phoneNumber',
+                dataIndex: 'subjectFirst',
             },
             {
-                title:"Интерес",
-                dataIndex: 'interest',
+                title:"Телефонный номер",
+                dataIndex: 'subjectSecond',
             },
+            {
+                title:"Телефонный номер",
+                dataIndex: 'subjectThird',
+            },
+
             {
                 title:"Дата",
                 dataIndex: 'createAt',
@@ -93,14 +98,16 @@ class Followers extends React.Component {
         if (current >= 0) {{
                 getFollowers(current, paginationDefaultItemCount).then((res) => {
                     if (res) {
-                        let users = res.data.content;
+                        let users = res.data&&res.data.data&&res.data.data.routes;
                         let listRows=[];
                         users.map(function (u) {
                             let obj = {
                                 id: u.id,
-                                fullName: u.fullName,
-                                email: u.email,
-                                phoneNumber: u.phoneNumber,
+                                name: u.name,
+                                code: u.code,
+                                subjectFirst: u.subjectFirst.nameRu,
+                                subjectSecond: u.subjectSecond.nameRu,
+                                subjectThird: u.subjectThird.nameRu,
                                 interest:u.interest,
                                 createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
                             };
@@ -146,7 +153,6 @@ class Followers extends React.Component {
             totalElements,
             currentPage,
             selectedRowKeys,
-
             courses
 
         } = this.state;
@@ -174,7 +180,7 @@ class Followers extends React.Component {
                     </Col>
                     <Col>
                         <Space>
-                            <ModalForm getList={this.getList} />
+                            <ModalForm list={list} getList={this.getList} />
 
                             {
                                 isSingle && (

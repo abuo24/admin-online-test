@@ -3,7 +3,7 @@ import { HttpRequestHub } from '../HttpRequestHub';
 export const loginUser = (obj) => {
     const config = {
         method: 'POST',
-        url: `/api/auth/signin`,
+        url: `/api/auth/login`,
         data: { ...obj }
     };
     return HttpRequestHub(config);

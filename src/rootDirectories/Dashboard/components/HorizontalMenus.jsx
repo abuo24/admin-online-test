@@ -9,6 +9,7 @@ import {
     FileDoneOutlined,
     MenuOutlined,
     AuditOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons';
 
 import { connect } from 'react-redux';
@@ -43,6 +44,11 @@ const menus = [
         path: '/course',
         label: " Учебные курсы",
         icon: <AuditOutlined />,
+    },
+    {
+        path: '/question',
+        label: " Учебные курсы",
+        icon: <QuestionCircleOutlined />,
     },
 
 ];

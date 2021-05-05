@@ -51,7 +51,7 @@ function TopNavbar(props) {
                 <Col flex="100px">
                     <Title level={4}>
                         <Link to='/dashboard'>
-                            OnlineZakoAdmin
+                            OnlineTestAdmin
                         </Link>
                     </Title>
                 </Col>

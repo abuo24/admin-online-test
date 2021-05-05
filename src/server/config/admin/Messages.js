@@ -1,9 +1,9 @@
 import { HttpRequestHub } from '../../HttpRequestHub';
 
-export const getMessages = (page = 0, size = 10) => {
+export const getHistories = (page = 0, size = 10) => {
     const config = {
         method: 'GET',
-        url: `/api/superAdmin/message/getPage?page=${page}&size=${size}`,
+        url: `/api/client/history/all?page=${page}&size=${size}`,
     };
     return HttpRequestHub(config);
 };

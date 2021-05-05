@@ -59,7 +59,7 @@ class Course extends React.Component {
     };
     handleClickedId(id){
         console.log(id);
-        localStorage.setItem("courseId",id);
+        localStorage.setItem("subjectId",id);
     };
     onSelectedRowKeysChange = (selectedRowKeys) => {
         this.setState({selectedRowKeys});
@@ -69,29 +69,20 @@ class Course extends React.Component {
         return [
             {
                 title: " Название курса (Русский)",
-                dataIndex: 'titleRu',
+                dataIndex: 'nameRu',
             },
             {
-                title: " Статус",
-                dataIndex: 'status',
+                title: " Название курса (Русский)",
+                dataIndex: 'nameUz',
+            }, {
+                title: " Название курса (Русский)",
+                dataIndex: 'parentsFirst',
             },
             {
-                title: " Категория",
-                dataIndex: 'category',
-            },
-            {
-                title: " Учитель",
-                dataIndex: 'teacher',
-            },
-            {
-                title: " Продолжительность",
-                dataIndex: 'duration',
-            },
-            {
-                title: " Модул",
+                title: "3 blok",
                 dataIndex: 'id',
                 render: id =>
-                    <Link to={`/module/${id}`} onClick={()=>this.handleClickedId(id)}>Module</Link>
+                    <Link to={`/part/${id}`} onClick={()=>this.handleClickedId(id)}>3 Blok</Link>
             },
         ];
     };
@@ -101,26 +92,28 @@ class Course extends React.Component {
         if (current >= 0) {
             {
                 getCourse(current, paginationDefaultItemCount).then((res) => {
-                    if (res && Array.isArray(res.data.content)) {
+                    if (res &&res.data&&res.data.data&&res.data.data.subjects&& Array.isArray(res.data.data.subjects)) {
                         let listDatas = [];
-                        res.data.content.map(function (course) {
-                            let teacher = course.teacher ? course.teacher.firstName : '';
-                            let category = course.category ? course.category.nameRu : '';
+
+                        res.data.data.subjects.map(function (course) {
+                            let mas = []
+                            course.parentsFirst.map(i=>{
+                                mas.push(i.nameRu)
+                            })
                             let obj = {
                                 id: course.id,
-                                titleRu: course.titleRu,
-                                status: course.status,
-                                category,
-                                teacher,
-                                duration: course.duration
+                                nameRu: course.nameRu,
+                                nameUz: course.nameUz,
+                                parentsFirst: mas.toString()
                             };
+
                             listDatas.push(obj);
                         });
                         this.setState({
                             isFetching: false,
                             selectedRowKeys: [],
-                            totalElements: res.data.totalElements,
-                            list: res.data.content,
+                            totalElements: res.data.data.totalItems,
+                            list: res.data.data.subjects,
                             listDatas: listDatas
                         })
                     } else {
@@ -134,17 +127,7 @@ class Course extends React.Component {
         }
     };
     getCollections = () => {
-        getTeachers().then(res => {
-            this.setState({
-                teachers: res.data.content
-            })
-        });
-        getCategories().then(res => {
 
-            this.setState({
-                categories: res.data.content
-            })
-        });
         this.getList();
     };
 
@@ -160,6 +143,7 @@ class Course extends React.Component {
 
     render() {
         const {
+            list,
             isFetching,
             totalElements,
             currentPage,
@@ -194,17 +178,17 @@ class Course extends React.Component {
                     </Col>
                     <Col>
                         <Space>
-                            <ModalForm teachers={teachers} categories={categories} getList={this.getList}/>
+                            <ModalForm list={list} categories={categories} getList={this.getList}/>
 
                             {
                                 isSingle && (
-                                    <ModalForm edit categories={categories} teachers={teachers} getList={this.getList}
+                                    <ModalForm list={list}  edit categories={categories} teachers={teachers} getList={this.getList}
                                                getObj={this.getCheckedObj}/>
                                 )
                             }
                             {
                                 isMultiple && (
-                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList}
+                                    <DeleteConfirm list={list}  selectedIds={selectedRowKeys} getList={this.getList}
                                                    delete={deleteCourse}/>
                                 )
                             }

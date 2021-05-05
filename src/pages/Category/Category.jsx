@@ -8,6 +8,7 @@ import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 import "../pages.scss";
 import {deleteCategory, getCategories} from "../../server/config/admin/Category";
 import {paginationDefaultItemCount} from "../../constants";
+import {Link} from "react-router-dom";
 
 const { Search } = Input;
 
@@ -53,18 +54,26 @@ class Category extends React.Component {
     onSelectedRowKeysChange = (selectedRowKeys) => {
         this.setState({ selectedRowKeys });
     };
-
+    handleClickedId(id){
+        console.log(id);
+        localStorage.setItem("groupId",id);
+    };
     renderColumns = () => {
 
         return [
             {
                 title: " Наименование (русский)",
-                dataIndex: `nameRu`,
+                dataIndex: `name`,
             },
             {
                 title: "Наименование (узбек)",
-                dataIndex: `nameUz`,
-            },
+                dataIndex: `createAt`,
+            },{
+                title: " Модул",
+                dataIndex: 'id',
+                render: id =>
+                    <Link to={`/module/${id}`} onClick={()=>this.handleClickedId(id)}>Users</Link>
+            }
         ];
     };
 
@@ -72,12 +81,12 @@ class Category extends React.Component {
         const { currentPage } = this.state;
         const current = currentPage - 1;
         getCategories(current, paginationDefaultItemCount).then((res) => {
-            if (res&&Array.isArray(res.data.content)) {
+            if (res&&Array.isArray(res.data.data.groups)) {
                 this.setState({
                     isFetching: false,
                     selectedRowKeys: [],
                     totalElements: res.data.totalElements,
-                    list: res.data.content,
+                    list: res.data.data.groups,
                 })
             } else {
                 this.setState({

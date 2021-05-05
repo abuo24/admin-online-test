@@ -8,7 +8,7 @@ import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 import "../pages.scss";
 import moment from "moment";
 import {paginationDefaultItemCount} from "../../constants";
-import {deleteMessage, getMessages} from "../../server/config/admin/Messages";
+import {deleteMessage, getHistories, getMessages} from "../../server/config/admin/Messages";
 
 const { Search } = Input;
 
@@ -62,13 +62,47 @@ class Messages extends React.Component {
                 title: " Полное имя",
                 dataIndex: `fullName`,
             },
+
+            {
+                title: " Полное имя",
+                dataIndex: `blok1`,
+            },
+
             {
                 title: "Эл. адрес",
-                dataIndex: `email`,
+                dataIndex: `count1`,
+            },   {
+                title: " Полное имя",
+                dataIndex: `blok2`,
+            },
+
+            {
+                title: "Эл. адрес",
+                dataIndex: `count2`,
+            },  {
+                title: " Полное имя",
+                dataIndex: `blok3`,
+            },
+
+            {
+                title: "Эл. адрес",
+                dataIndex: `count3`,
             },
             {
                 title: "Тема",
-                dataIndex: `subject`,
+                dataIndex: `count`,
+            },
+            {
+                title: "Тема",
+                dataIndex: `percent`,
+            },
+            {
+                title: "Эл. адрес",
+                dataIndex: `ball`,
+            },
+            {
+                title: "Тема",
+                dataIndex: `time`,
             },
             {
                 title: "Дата",
@@ -83,17 +117,26 @@ class Messages extends React.Component {
 
         if (current >= 0) {
             {
-                getMessages(current, paginationDefaultItemCount).then((res) => {
+                getHistories(current, paginationDefaultItemCount).then((res) => {
                     console.log(res)
-                    if (res&&Array.isArray(res.data.content)) {
+                    if (res&&res.data) {
                         let listRows = [];
-                        res.data.content.map(function (u) {
+                        res.data.data.histories.map(function (u) {
                             let obj = {
                                 id: u.id,
-                                fullName: u.fullName,
-                                email: u.email,
+                                fullName: u.user.first_name+" "+u.user.last_name,
+                                blok1: u.blok.blokFirst.nameRu,
+                                count1: u.countFirst,
+                                blok2: u.blok.blokSecond.nameRu,
+                                count2: u.countSecond,
+                                blok3: u.blok.blokThird.nameRu,
+                                count3: u.countThird,
+                                ball: u.ballAll,
+                                count: u.countAll,
+                                percent: u.percentAll+" %",
                                 comment: u.comment,
                                 subject: u.subject,
+                                time: u.spentTime,
                                 createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
                             };
                             listRows.push(obj);
@@ -101,7 +144,7 @@ class Messages extends React.Component {
                         this.setState({
                             isFetching: false,
                             selectedRowKeys: [],
-                            totalElements: res.data.totalElements,
+                            totalElements: res.data.data.totalItems,
                             list: listRows,
 
                         })
@@ -148,11 +191,6 @@ class Messages extends React.Component {
                         <Space>
                             <ModalForm getList={this.getList} />
 
-                            {
-                                isSingle && (
-                                    <ModalForm edit getList={this.getList} getObj={this.getCheckedObj} />
-                                )
-                            }
                             {
                                 isMultiple && (
                                     <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deleteMessage} />

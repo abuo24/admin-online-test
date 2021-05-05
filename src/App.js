@@ -10,6 +10,8 @@ import { userAccessTokenName } from "./constants";
 
 /* COMPONENTS */
 import LazyLoadErrorBoundary from "./commonComponents/LazyLoadErrorBoundary";
+import axios from "axios";
+import {axiosInstance} from "./server/host";
 
 const Dashboard = lazy(() => import("./rootDirectories/Dashboard/Dashboard"));
 const Login = lazy(() => import("./rootDirectories/Login/Login"));

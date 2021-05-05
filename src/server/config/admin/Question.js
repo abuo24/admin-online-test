@@ -1,20 +1,20 @@
 import { HttpRequestHub } from '../../HttpRequestHub';
 
 // export const getCourse = (page = 0, size = 10) => {
-export const getCourse = (page, size) => {
+export const getQuestion = (page, size) => {
     const config = {
         method: 'GET',
-        url: `/api/admin/subject/all?page=${page}&size=${size}`,
+        url: `/api/admin/question/all?page=${page}&size=${size}`,
     };
     return HttpRequestHub(config);
 };
-export const getCourses = () => {
-    const config = {
-        method: 'GET',
-        url: `/api/client/subject/all`,
-    };
-    return HttpRequestHub(config);
-};
+// export const getCourses = () => {
+//     const config = {
+//         method: 'GET',
+//         url: `/api/client/subject/all`,
+//     };
+//     return HttpRequestHub(config);
+// };
 export const getCoursesWithCategoryId = (categoryId) => {
     const config = {
         method: 'GET',
@@ -22,28 +22,28 @@ export const getCoursesWithCategoryId = (categoryId) => {
     };
     return HttpRequestHub(config);
 };
-export const createCourse = (obj) => {
+export const createQuestion = (obj) => {
     const config = {
         method: 'POST',
-        url: `/api/admin/subject/add`,
+        url: `/api/admin/question/add`,
         data: { ...obj}
     };
     return HttpRequestHub(config);
 };
 
-export const updateCourse = (id, obj) => {
+export const updateQuestion = (questionId, obj) => {
     const config = {
         method: 'PUT',
-        url: `/api/admin/subject/${id}`,
+        url: `/api/admin/questions/${questionId}`,
         data: { ...obj }
     };
     return HttpRequestHub(config);
 };
 
-export const deleteCourse = (id) => {
+export const deleteQuestion = (id) => {
     const config = {
         method: 'DELETE',
-        url: `/api/admin/subject/${id}`,
+        url: `/api/admin/question/${id}`,
     };
     return HttpRequestHub(config);
 };

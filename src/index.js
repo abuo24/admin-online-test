@@ -7,11 +7,11 @@ import { message } from "antd";
 import store from "./redux/store";
 
 import "antd/dist/antd.css";
+import axios from "axios";
 message.config({
     duration: 2,
     maxCount: 3,
 });
-
 ReactDOM.render(
     <Provider store={store}>
         <App />

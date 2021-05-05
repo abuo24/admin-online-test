@@ -17,13 +17,13 @@ import { userAccessTokenName } from "../../constants";
 const { Title } = Typography;
 
 const Login = (props) => {
-    const [username, setUsername] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState(null);
     const [password, setPassword] = useState(null);
     const [isSubmitting, setSubmitting] = useState(false);
 
     const [loginForm] = Form.useForm();
 
-    const handleUsernameChange = (e) => setUsername(e.target.value);
+    const handleUsernameChange = (e) => setPhoneNumber(e.target.value);
 
     const handlePasswordChange = (e) => setPassword(e.target.value);
 
@@ -31,7 +31,7 @@ const Login = (props) => {
         setSubmitting(true);
 
         loginUser({
-            username,
+            phoneNumber,
             password,
         }).then((res) => {
             if (res && res.status === 200 && res.data) {
@@ -48,7 +48,7 @@ const Login = (props) => {
     return (
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <Col xs={20} sm={12} md={8} lg={4}>
-                <Title level={3} className="text-center">OnlineZakoAdmin</Title>
+                <Title level={3} className="text-center">OnlineTestAdmin</Title>
 
                 <Form
                     form={loginForm}
@@ -56,7 +56,7 @@ const Login = (props) => {
                     onFinish={onFinish}
                 >
                     <Form.Item
-                        name="username"
+                        name="phoneNumber"
                         rules={[
                             {
                                 required: true,
@@ -67,7 +67,7 @@ const Login = (props) => {
                         <Input
                             autoFocus
                             prefix={<UserOutlined className="site-form-item-icon" />}
-                            name="username"
+                            name="phoneNumber"
                             placeholder="Username"
                             onChange={handleUsernameChange}
                             disabled={isSubmitting}

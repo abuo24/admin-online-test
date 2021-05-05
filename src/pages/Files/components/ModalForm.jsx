@@ -157,47 +157,7 @@ class ModalForm extends React.Component {
                                     <br/>
                                     {/*<Button onClick={this.onFormSubmit}>Загрузить</Button>*/}
                                 </Form.Item>
-                                <Form.Item
-                                    label={"Auth?"}
-                                    name="authValue"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `auth!`,
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        showSearch
-                                        placeholder={"Auth?"}
-                                        onChange={(value) => this.handleSelectChange('auth', value)}
-                                    >
-                                        <Option value="true" key={1}>
-                                            AUTH
-                                        </Option>
-                                        <Option value="false" key={2}>
-                                            SECRET
-                                        </Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    label={"Хэш-код"}
-                                    name="hashCode"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Хэш-код!`,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        style={{color:"black"}}
-                                        disabled
-                                        placeholder={"Хэш-код"}
-                                        name="hashCode"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
+
                             </Col>
                         </Row>
 
@@ -211,7 +171,7 @@ class ModalForm extends React.Component {
                             </Col>
                             <Col>
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit" disabled={edit?true:(auth===null||file===null)} onClick={this.onFormSubmit} loading={isSubmitting}>
+                                    <Button type="primary" htmlType="submit"  onClick={this.onFormSubmit} loading={isSubmitting}>
                                         Загрузить
                                     </Button>
                                 </Form.Item>

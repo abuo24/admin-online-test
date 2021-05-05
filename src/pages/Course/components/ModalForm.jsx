@@ -6,28 +6,26 @@ import {EditOutlined, PlusOutlined} from '@ant-design/icons';
 import "../../pages.scss";
 import {createCourse, updateCourse} from "../../../server/config/admin/Course";
 import {host, port} from "../../../server/host";
-import  CKEditor  from 'ckeditor4-react';
+import CKEditor from 'ckeditor4-react';
+import {getSubjectById} from "../../../server/config/admin/Category";
 
 const {Option} = Select;
 const initialParams = {
-    titleRu: null,
-    titleUz: null,
-    descriptionRu:null,
-    descriptionUz:null,
-    lectures: null,
-    duration: null,
-    status: null,
-    hashCode: null,
-    teacherId:null,
-    categoryId:null,
+    nameUz: null,
+    nameRu: null,
+    parentsFirst: null,
+    parentsSecond: null,
+    subjects: []
 };
 
 class ModalForm extends React.Component {
     constructor() {
         super();
         this.state = {
-            teacher:null,
-            category:null,
+            teacher: null,
+            category: null,
+            parentsSecond: [],
+            parentsFirst: [],
             visible: false,
             isSubmitting: false,
             params: {...initialParams}
@@ -36,40 +34,44 @@ class ModalForm extends React.Component {
     }
 
     onFinish = () => {
-        const { params } = this.state;
+        const {params, parentsFirst, parentsSecond} = this.state;
         const objToSend = {
             ...params,
+            parentsFirst,
+            parentsSecond
         };
         console.log(objToSend);
         this.setState({isSubmitting: true}, () => {
             if (this.props.edit) {
                 const userId = objToSend.id;
                 delete objToSend.id;
+                console.log(objToSend);
+                console.log(this.state);
                 updateCourse(userId, objToSend).then((res) => {
                     if (res) {
                         this.setState({isSubmitting: false, visible: false});
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
                     } else {
                         message.success('Request failed!');
                         this.setState({isSubmitting: false, visible: false});
                     }
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
-                }).catch(e=>{
+                }).catch(e => {
                     message.success('Request failed!');
                 });
             } else {
                 createCourse(objToSend).then((res) => {
                     if (res) {
                         this.setState({isSubmitting: false, visible: false});
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
                     } else {
                         message.success('Request failed!');
                         this.setState({isSubmitting: false, visible: false});
                     }
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
-                }).catch(e=>{
+                }).catch(e => {
                     message.success('Request failed!');
                 });
             }
@@ -87,21 +89,58 @@ class ModalForm extends React.Component {
         });
     };
 
-    handleSelectChange = (name, value) => {
+    handleSelectChange = (name, value, item = null) => {
         if (name) {
-            this.setState({
-                params: {
-                    ...this.state.params,
-                    [name]: value,
+            if (name === "subjectsId") {
+                this.setState({
+                    parentsFirst: value
+                })
+            }
+            if (item == null) {
+                this.setState({
+                    params: {
+                        ...this.state.params,
+                        [name]: value,
+                    }
+                })
+            } else {
+                if (this.state.parentsFirst.find(i => item) != null) {
+                    if (this.state.parentsSecond.find(i => i.id === item) === null) {
+                        console.log(this.state.parentsSecond.find(i => i.id === item))
+
+                        this.setState({
+                            parentsSecond: [
+                                ...this.state.parentsSecond,
+                                {
+                                    id: item,
+                                    children: value
+                                }
+                            ]
+                        })
+                    } else {
+                        // this.state.parentsSecond.remove(this.state.parentsSecond.find(i => i.id === item))
+                        let filtered = this.state.parentsSecond.filter(function (el) {
+                            return el.id !== item;
+                        });
+                        this.setState({
+                            parentsSecond: [
+                                ...filtered,
+                                {
+                                    id: item,
+                                    children: value
+                                }
+                            ]
+                        })
+                    }
                 }
-            })
+            }
         }
     };
     dateTimeChangeHandler = (date) => {
         this.setState({
             params: {
                 ...this.state.params,
-                resultDate: date,
+                resultDate: date
             }
         })
     };
@@ -113,16 +152,16 @@ class ModalForm extends React.Component {
             const editingObj = this.props.getObj();
             delete editingObj.updateAt;
             delete editingObj.createAt;
-            let teacher = editingObj.teacher?
-                (editingObj.teacher.firstName+" "+editingObj.teacher.lastName):'';
-            let category = editingObj.category?
-                (editingObj.category.nameRu+" "+editingObj.category.nameUz):'';
-            let hashCode = editingObj.attachement?
-                editingObj.attachement.hashCode:'';
-            let teacherId = editingObj.teacher?
-                editingObj.teacher.id:'';
-            let categoryId = editingObj.category?
-                editingObj.category.id:'';
+            let teacher = editingObj.teacher ?
+                (editingObj.teacher.firstName + " " + editingObj.teacher.lastName) : '';
+            let category = editingObj.category ?
+                (editingObj.category.nameRu + " " + editingObj.category.nameUz) : '';
+            let hashCode = editingObj.attachement ?
+                editingObj.attachement.hashCode : '';
+            let teacherId = editingObj.teacher ?
+                editingObj.teacher.id : '';
+            let categoryId = editingObj.category ?
+                editingObj.category.id : '';
             this.setState({
                 visible: true,
                 teacher,
@@ -152,33 +191,18 @@ class ModalForm extends React.Component {
         if (edit) {
 
         }
+
     }
-    changeCheck=(e)=>{
+
+    changeCheck = (e) => {
         this.setState({
-            params:{
+            params: {
                 ...this.state.params,
                 certification: e.target.checked,
             },
         });
     };
-    handleCKUChangeRu = (event) => {
-        const data = event.editor.getData();
-        this.setState({
-            params: {
-                ...this.state.params,
-                descriptionRu: data,
-            }
-        })
-    };
-    handleCKUChangeUz = (event) => {
-        const data = event.editor.getData();
-        this.setState({
-            params: {
-                ...this.state.params,
-                descriptionUz: data,
-            }
-        })
-    };
+
     render() {
         const {
             isSubmitting,
@@ -187,19 +211,26 @@ class ModalForm extends React.Component {
         } = this.state;
 
         const {
-            titleRu,
-            titleUz,
+            nameUz,
+            nameRu,
             descriptionRu,
             descriptionUz,
             lectures,
+            parentsFirst,
             duration,
             status,
             hashCode,
-            teacherId,
+            id,
+            teacherId, subjectsId,
             categoryId,
         } = this.state.params;
 
-        const {edit, teachers, categories} = this.props;
+        const {edit, teachers, getList, list, categories} = this.props;
+        let mas = []
+        parentsFirst && parentsFirst.map(i => {
+            mas.push(i.id)
+        })
+
 
         return (
             <React.Fragment>
@@ -231,18 +262,19 @@ class ModalForm extends React.Component {
                         onFinish={this.onFinish}
                         ref={this.currentForm}
                         initialValues={{
-                            titleRu,
-                            titleUz,
-                            descriptionRu,
-                            descriptionUz,
-                            lectures,
-                            duration,
-                            status,
-                            hashCode,
-                            teacherId,
-                            categoryId,
-                            teacher,
-                            category,
+                            nameUz,
+                            nameRu,
+                            parentsFirst
+                            // descriptionRu,
+                            // descriptionUz,
+                            // lectures,
+                            // duration,
+                            // status,
+                            // hashCode,
+                            // teacherId,
+                            // categoryId,
+                            // teacher,
+                            // category,
                         }}
                     >
                         <Row gutter={[16]}>
@@ -250,7 +282,7 @@ class ModalForm extends React.Component {
                             <Col md={24} lg={12}>
                                 <Form.Item
                                     label={"Название курса (Русский)"}
-                                    name="titleRu"
+                                    name="nameRu"
                                     rules={[
                                         {
                                             required: true,
@@ -260,14 +292,14 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Название курса (Русский)"}
-                                        name="titleRu"
+                                        name="nameRu"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
                                     label={"Название курса (узбек)"}
-                                    name="titleUz"
+                                    name="nameUz"
                                     rules={[
                                         {
                                             required: true,
@@ -277,30 +309,15 @@ class ModalForm extends React.Component {
                                 >
                                     <Input
                                         placeholder={"Название курса (узбек)"}
-                                        name="titleUz"
+                                        name="nameUz"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
-                                <Form.Item
-                                    label={" Лекции"}
-                                    name="lectures"
-                                    rules={[
-                                        {
-                                            required: false,
-                                            message: `Лекции!`,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder={"Лекции"}
-                                        name="lectures"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
-                                <Form.Item
+
+                                {edit ? <Form.Item
                                     label={"Учитель"}
-                                    name="teacher"
+                                    // name="parentsFirst"
                                     rules={[
                                         {
                                             required: true,
@@ -310,162 +327,59 @@ class ModalForm extends React.Component {
                                 >
                                     <Select
                                         showSearch
-                                        placeholder={"Учитель"}
-                                        onChange={(value) => this.handleSelectChange('teacherId', value)}
+                                        mode={"multiple"}
+                                        placeholder={"Блокь 2 предметы"}
+                                        onChange={(item) => {
+                                            this.handleSelectChange('subjectsId', item)
+                                        }}
+                                        defaultValue={mas}
                                     >
                                         {
-                                            Array.isArray(teachers) ? teachers.map((role) => (
-                                                <Option value={role.id} key={role.id}>
-                                                    {role['firstName']+" "+role['lastName']}
+                                            Array.isArray(list) ? list.map((role) => (
+                                                <Option
+                                                    disabled={id === role.id} value={role.id}
+                                                    key={role.id}>
+                                                    {role['nameUz'] + " / " + role['nameRu']}
                                                 </Option>
                                             )) : ''
                                         }
                                     </Select>
-                                </Form.Item>
+                                </Form.Item> : ""}
                             </Col>
 
                             <Col md={24} lg={12}>
-                                <Form.Item
-                                    label={"status"}
-                                    name="status"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `status!`,
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        showSearch
-                                        placeholder={"status"}
-                                        // mode="multiple"
-                                        onChange={(value) => this.handleSelectChange('status', value)}
+                                {edit ? subjectsId && subjectsId.map(item => {
+                                    let dataSub = list.find(i => i.id === item)
+                                    return <Form.Item
+                                        label={`Блокь ${dataSub && dataSub.nameRu} предметы`}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: `Категория!`,
+                                            },
+                                        ]}
                                     >
+                                        <Select
+                                            showSearch
+                                            mode={"multiple"}
+                                            placeholder={`Блокь 3 предметы`}
+                                            onChange={(value) => this.handleSelectChange(`categoryId`, value, item)}
+                                        >
+                                            {
+                                                Array.isArray(list) ? list.map((role) => (
+                                                    <Option
+                                                        disabled={id === role.id || subjectsId.find(i => i === role.id) != null}
+                                                        value={role.id} key={role.id}>
+                                                        {role['nameRu'] + "/" + role['nameUz']}
+                                                    </Option>
+                                                )) : ''
+                                            }
+                                        </Select>
 
-                                        <Option value="DISABLE" key={1}>
-                                            DISABLE
-                                        </Option>
-
-                                        <Option value="ACTIVE" key={2}>
-                                            ACTIVE
-                                        </Option>
-                                    </Select>
-
-                                </Form.Item>
-
-                                <Form.Item
-                                    label={"Продолжительность"}
-                                    name="duration"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Продолжительность!`,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        type={"number"}
-                                        placeholder={"Продолжительность"}
-                                        name="duration"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    label={edit ? (<a target='_blank'
-                                                      href={`${host}:${port}` + '/api/client/file/preview/' + hashCode}>
-                                        Изображение учителя</a>) : 'Хэш-коды файлов'}
-                                    name="hashCode"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Хэш-коды Изображение!`,
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder={"Хэш-коды Изображение"}
-                                        name="hashCode"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    label={"Категория"}
-                                    name="category"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Категория!`,
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        showSearch
-                                        placeholder={"Категория"}
-                                        onChange={(value) => this.handleSelectChange('categoryId', value)}
-                                    >
-                                        {
-                                            Array.isArray(categories) ? categories.map((role) => (
-                                                <Option value={role.id} key={role.id}>
-                                                    {role['nameRu']+"/"+role['nameUz']}
-                                                </Option>
-                                            )) : ''
-                                        }
-                                    </Select>
-                                </Form.Item>
+                                    </Form.Item>
+                                }) : ""}
                             </Col>
                         </Row>
-
-
-                        <Row gutter={[16]}>
-                            <Col md={24} lg={24}>
-                                <Form.Item
-                                    label={"Описание курса (русский)"}
-                                    name="descriptionRu"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Описание курса (русский)!`,
-                                        },
-                                    ]}
-                                >
-                                    <CKEditor
-                                        style={{minHeight: "400px"}}
-                                        config={{
-                                            allowedContent :true,
-                                            extraPlugins : 'autogrow,sourcedialog',
-                                            removePlugins : 'sourcearea'
-                                        }}
-                                        data={(descriptionRu===null)?"<p>ZAKO Описание курса (русский)</p>":descriptionRu}
-                                        onChange={this.handleCKUChangeRu}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    label={"Описание курса (узбек)"}
-                                    name="descriptionUz"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: `Описание курса (узбек)!`,
-                                        },
-                                    ]}
-                                >
-                                    <CKEditor
-                                        style={{minHeight: "400px"}}
-                                        config={{
-                                            allowedContent :true,
-                                            extraPlugins : 'autogrow,sourcedialog',
-                                            removePlugins : 'sourcearea'
-                                        }}
-                                        data={(descriptionUz===null)?"<p>ZAKO Описание курса (узбекский)</p>":descriptionUz}
-                                        onChange={this.handleCKUChangeUz}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-
 
                         <Row className="form-footer" justify="end" gutter={[8]}>
                             <Col>

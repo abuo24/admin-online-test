@@ -20,6 +20,7 @@ class File extends React.Component {
         this.state = {
             list: [],
             selectedRowKeys: [],
+            selectedRowKeysHashId: [],
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
@@ -41,17 +42,25 @@ class File extends React.Component {
 
     handleClickedRow = (record) => {
         let newList = [];
-        const { selectedRowKeys } = this.state;
+        let list = [];
+        const { selectedRowKeys,selectedRowKeysHashId } = this.state;
         const id = record['id'];
+        const hashid = record['hashId'];
 
         if (this.state.selectedRowKeys.includes(id)) {
             newList = selectedRowKeys.filter((selectedId) => selectedId !== id);
         } else {
             newList = [...selectedRowKeys, id];
         }
+        if (this.state.selectedRowKeysHashId.includes(hashid)) {
+            list = selectedRowKeys.filter((selectedId) => selectedId !== id);
+        } else {
+            list = [...selectedRowKeys, id];
+        }
 
         this.setState({
             selectedRowKeys: newList,
+            selectedRowKeysHashId: list
         })
     };
 
@@ -70,17 +79,14 @@ class File extends React.Component {
                 title:" Наименование",
                 dataIndex: 'name',
             },
-            {
-                title:" AUTH?",
-                dataIndex: 'authValue',
-            },
+
             {
                 title:" Размер",
                 dataIndex: 'size',
             },
             {
                 title:" Тип содержимого",
-                dataIndex: 'contentType',
+                dataIndex: 'type',
             },
             {
                 title:" Дата",
@@ -102,19 +108,18 @@ class File extends React.Component {
         
         if (current >= 0) {{
                 getFiles(current, paginationDefaultItemCount).then((res) => {
-                    if (res&&Array.isArray(res.data.content)) {
-                        let listData=res.data.content;
+                    if (res&&res.data) {
+                        let listData=res.data.data.files;
                         let rowListData=[];
-                        // let count = 1;
                         listData.map(function (blog) {
                             let row = {
-                                id: blog.hashCode,
-                                hashCode: blog.hashCode,
+                                id: blog.hashId,
+                                hashCode: blog.hashId,
                                 authValue: blog.auth?"AUTH":"SECRET",
-                                auth: blog.auth,
+                                type: blog.type,
                                 name: blog.name,
                                 size: blog.size,
-                                createAt: moment(blog.createAt).format("YYYY-MM-DD / HH:mm:ss"),
+                                createAt: moment(blog.date).format("YYYY-MM-DD / HH:mm:ss"),
                                 contentType: blog.contentType
                             };
                             rowListData.push(row);
@@ -123,7 +128,7 @@ class File extends React.Component {
                         this.setState({
                             isFetching: false,
                             selectedRowKeys: [],
-                            totalElements: res.data.totalElements,
+                            totalElements: res.data.data.totalItems,
                             list:rowListData,
                             // list:res.data.content
                         })
@@ -154,7 +159,7 @@ class File extends React.Component {
             totalElements,
             currentPage,
             selectedRowKeys,
-
+            selectedRowKeysHashId
         } = this.state;
         const columns = this.renderColumns();
 
@@ -182,13 +187,8 @@ class File extends React.Component {
                             <ModalForm  getList={this.getList} />
 
                             {
-                                isSingle && (
-                                    <ModalForm edit getList={this.getList} getObj={this.getCheckedObj} />
-                                )
-                            }
-                            {
                                 isMultiple && (
-                                    <DeleteConfirm selectedIds={selectedRowKeys} getList={this.getList} delete={deleteFile} />
+                                    <DeleteConfirm selectedIds={selectedRowKeysHashId} getList={this.getList} delete={deleteFile} />
                                 )
                             }
                             <Search

@@ -1,10 +1,10 @@
 import React from 'react';
 import {Row, Col, Input, Table, Skeleton, Space, Radio, Button} from "antd";
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import ModalForm from "./components/ModalForm";
 import DeleteConfirm from "../../commonComponents/DeleteConfirm";
-import { paginationDefaultItemCount } from "../../constants";
+import {paginationDefaultItemCount} from "../../constants";
 
 import "../pages.scss";
 import {deleteUser, getUsers} from "../../server/config/admin/Users";
@@ -14,7 +14,8 @@ import moment from "moment";
 import {host, port} from "../../server/host";
 import avatar from "../../assets/img/no-picture.jpg";
 import {deleteTeacher, getTeachers} from "../../server/config/admin/Teacher";
-const { Search } = Input;
+
+const {Search} = Input;
 
 class Users extends React.Component {
     constructor() {
@@ -25,13 +26,14 @@ class Users extends React.Component {
             isFetching: true,
             totalElements: 0,
             currentPage: 1,
-            userType:'student',
-            listColumns:[],
-            courses:[]
+            userType: 'student',
+            listColumns: [],
+            courses: []
         }
     }
+
     getCheckedObj = () => {
-        const { list, selectedRowKeys } = this.state;
+        const {list, selectedRowKeys} = this.state;
         let newObj = {};
 
         list.forEach((obj) => {
@@ -44,7 +46,7 @@ class Users extends React.Component {
 
     handleClickedRow = (record) => {
         let newList = [];
-        const { selectedRowKeys } = this.state;
+        const {selectedRowKeys} = this.state;
         const id = record['id'];
         if (this.state.selectedRowKeys.includes(id)) {
             newList = selectedRowKeys.filter((selectedId) => selectedId !== id);
@@ -57,135 +59,50 @@ class Users extends React.Component {
     };
 
     onSelectedRowKeysChange = (selectedRowKeys) => {
-        this.setState({ selectedRowKeys });
+        this.setState({selectedRowKeys});
     };
 
     renderStudentColumns = () => {
         return [
             {
-                title:"Студент",
-                dataIndex: 'hashCode',
-                render: (hashCode) => {
-                    return (
-                        <div className="profile-img-box">
-                            {hashCode ?
-                                <img src={host + ':' + port + '/api/client/file/preview/' + hashCode}
-                                     alt="Img error"/> :
-                                <img src={avatar} alt="Img error"/>
-                            }
-                        </div>
-                    );
-
-                }
-            },
-            {
-                title:"Ф.И.О",
+                title: "Ф.И.О",
                 dataIndex: 'fullName',
             },
             {
-                title:"Тел Номер",
+                title: "Тел Номер",
                 dataIndex: 'phoneNumber',
             },
             {
-                title:"Актив",
-                dataIndex: 'active',
-                render: (active) => {
-                    return (
-                        <div >
-                            {active ?"Истина":"Ложь"}
-                        </div>
-                    );
-
-                }
-            },
-            {
-                title:"Дата создания",
+                title: "Дата создания",
                 dataIndex: 'createAt',
             },
             {
                 title: " Инфо",
                 dataIndex: 'id',
                 render: id =>
-                    <Link to={`/userInfo/${id}`} onClick={()=>this.handleClickedId(id)}>Инфо</Link>
+                    <Link to={`/userInfo/${id}`} onClick={() => this.handleClickedId(id)}>Инфо</Link>
             },
         ];
     };
-    handleClickedId=(id)=>{
+    handleClickedId = (id) => {
         localStorage.setItem("userId", id);
-    };
-    renderTeacherColumns = () => {
-        return [
-            {
-                title:"Учителя",
-                dataIndex: 'hashCode',
-                render: (hashCode) => {
-                    return (
-                        <div className="profile-img-box">
-                            {hashCode ?
-                                <img src={host + ':' + port + '/api/client/file/preview/' + hashCode}
-                                     alt="Img error"/> :
-                                <img src={avatar} alt="Img error"/>
-                            }
-                        </div>
-                    );
-
-                }
-            },
-            {
-                title:"Ф.И.О",
-                dataIndex: 'fullName',
-            },
-            {
-                title:"Тел Номер",
-                dataIndex: 'phoneNumber',
-            },
-            {
-                title:" Telegram",
-                dataIndex: 'telegram',
-            },
-            {
-                title:" Instagram",
-                dataIndex: 'instagram',
-            },
-            {
-                title:" Facebook",
-                dataIndex: 'facebook',
-            },
-            {
-                title:"Актив",
-                dataIndex: 'active',
-                render: (active) => {
-                    return (
-                        <div >
-                            {active ?"Истина":"Ложь"}
-                        </div>
-                    );
-
-                }
-            },
-            {
-                title:"Дата создания",
-                dataIndex: 'createAt',
-            },
-
-        ];
     };
 
     getStudentList = () => {
-        const { currentPage } = this.state;
+        const {currentPage} = this.state;
         const current = currentPage - 1;
-        if (current >= 0) {{
+        if (current >= 0) {
+            {
                 getUsers(current, paginationDefaultItemCount).then((res) => {
-                    if (res&&Array.isArray(res.data.content)) {
-                        let list = res.data.content;
-                        let listColumns=[];
+                    if (res && res.data) {
+                        let list = res.data.data.users;
+                        let listColumns = [];
                         list.map(function (u) {
                             let obj = {
                                 id: u.id,
-                                fullName: u.firstName+' '+u.lastName,
-                                active:u.accountNonLocked,
+                                fullName: u.first_name + ' ' + u.last_name,
+                                active: u.accountNonLocked,
                                 phoneNumber: u.phoneNumber,
-                                hashCode:u.attachment?u.attachment.hashCode:'',
                                 createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
                             };
                             listColumns.push(obj);
@@ -193,7 +110,7 @@ class Users extends React.Component {
                         this.setState({
                             isFetching: false,
                             selectedRowKeys: [],
-                            totalElements: res.data.totalElements,
+                            totalElements: res.data.data.totalItems,
                             listColumns,
                             list,
                         })
@@ -204,92 +121,32 @@ class Users extends React.Component {
                         })
                     }
                 });
-            this.setState({
-                isFetching: false,
-                selectedRowKeys: [],
-                totalElements: 0,
-                list:[],
-                listColumns:[]
-            })
-            }
-        }
-    };
-
-    getTeacherList = () => {
-        const { currentPage } = this.state;
-        const current = currentPage - 1;
-        if (current >= 0) {{
-            getTeachers(current, paginationDefaultItemCount).then((res) => {
-                if (res&&Array.isArray(res.data.content)) {
-                    let list = res.data.content;
-                    let listColumns=[];
-                    list.map(function (u) {
-                        let obj = {
-                            id: u.id,
-                            fullName: u.firstName+' '+u.lastName,
-                            active:u.accountNonLocked,
-                            phoneNumber: u.phoneNumber,
-                            hashCode:u.attachment?u.attachment.hashCode:'',
-                            telegram:u.telegram,
-                            instagram:u.instagram,
-                            facebook:u.facebook,
-                            createAt: moment(u.createAt).format("YYYY-MM-DD / HH:mm:ss"),
-                        };
-                        listColumns.push(obj);
-                    });
-                    this.setState({
-                        isFetching: false,
-                        selectedRowKeys: [],
-                        totalElements: res.data.totalElements,
-                        listColumns,
-                        list,
-                    })
-                } else {
-                    this.setState({
-                        selectedRowKeys: [],
-                        isFetching: false,
-                    })
-                }
-            });
-            this.setState({
-                isFetching: false,
-                selectedRowKeys: [],
-                totalElements: 0,
-                list:[],
-                listColumns:[]
-            })
-        }
-        }
-    };
-
-    getCollections=()=>{
-        getCourses().then(res=>{
-            if (res&&Array.isArray(res.data)) {
                 this.setState({
-                    courses: res.data
+                    isFetching: false,
+                    selectedRowKeys: [],
+                    totalElements: 0,
+                    list: [],
+                    listColumns: []
                 })
             }
-        });
-        const {userType} = this.state;
-        userType === 'student' ? (this.getStudentList()):(this.getTeacherList())
+        }
+    };
+
+    getCollections = () => {
+        this.getStudentList();
     };
 
     handlePaginationChange = (page) => {
-        const {userType} = this.state;
-        userType === 'student' ? (this.setState({
-                currentPage: page,
-            }, () => this.getStudentList()))
-            :
-            (this.setState({
-                currentPage: page,
-            }, () => this.getTeacherList()))
+        this.setState({
+            currentPage: page,
+        }, () => this.getStudentList())
     };
 
     componentDidMount() {
         this.getCollections();
     }
+
     handleSizeChange = e => {
-        e.target.value==='student'?this.getStudentList():this.getTeacherList();
         this.setState({
             userType: e.target.value,
         });
@@ -307,7 +164,6 @@ class Users extends React.Component {
             userType
         } = this.state;
         const studentColumns = this.renderStudentColumns();
-        const teacherColumns = this.renderTeacherColumns();
 
         const rowSelection = {
             selectedRowKeys,
@@ -317,37 +173,33 @@ class Users extends React.Component {
 
         const isMultiple = selectedRowKeys.length > 0 ? true : false;
         const isSingle = selectedRowKeys.length === 1 ? true : false;
-        const {  edit } = this.props;
+        const {edit} = this.props;
         return (
             <div className="bg-white site-border">
                 <Row justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <Space>
                             <h3>
-                                {userType==='student'?'Студенты':'Учителя'}
+                                {userType === 'student' ? 'Студенты' : 'Учителя'}
                             </h3>
                         </Space>
                     </Col>
                     <Col>
-                        <Space style={{marginRight:'1vh'}}>
+                        <Space style={{marginRight: '1vh'}}>
                             <Radio.Group value={userType} onChange={this.handleSizeChange}>
                                 <Radio.Button value="student">Студенты</Radio.Button>
-                                <Radio.Button value="teacher">Учителя</Radio.Button>
                             </Radio.Group>
                         </Space>
-                        <Button href={`${host}:${port}`+'/api/client/excel/users'} style={{marginRight:'1vh'}}>
-                            Excel
-                        </Button>
                         <Space>
                             <ModalForm courses={courses}
-                                       getList={userType==='student'?this.getStudentList:this.getTeacherList}
+                                       getList={this.getStudentList}
                                        userType={userType}
                             />
 
                             {
                                 isSingle && (
                                     <ModalForm edit courses={courses}
-                                               getList={userType==='student'?this.getStudentList:this.getTeacherList}
+                                               getList={this.getStudentList}
                                                getObj={this.getCheckedObj}
                                                userType={userType}
                                     />
@@ -357,48 +209,48 @@ class Users extends React.Component {
                             {
                                 isMultiple && (
                                     <DeleteConfirm selectedIds={selectedRowKeys}
-                                                   getList={userType==='student'?this.getStudentList:this.getTeacherList}
-                                                   delete={userType==='student'?deleteUser:deleteTeacher} />
+                                                   getList={this.getStudentList}
+                                                   delete={deleteUser}/>
                                 )
                             }
                             <Search
                                 key={1}
                                 placeholder="Поиск"
                                 onSearch={value => console.log(value)}
-                                style={{ width: 200 }}
+                                style={{width: 200}}
                             />
                         </Space>
                     </Col>
                 </Row>
                 {
                     isFetching ? (
-                        <Skeleton active />
+                        <Skeleton active/>
                     ) : (
-                            <Table
-                                pagination={{
-                                    current: currentPage,
-                                    total: totalElements,
-                                    pageSize:10,
-                                    onChange: this.handlePaginationChange,
-                                    showTotal: (totalElements) => `ВСЕ: ${totalElements}`,
-                                }}
-                                tableLayout="fixed"
-                                bordered
-                                size="small"
-                                rowSelection={rowSelection}
-                                columns={userType==='student'?studentColumns:teacherColumns}
-                                dataSource={listColumns}
-                                rowKey="id"
-                                scroll={{ x: 1000 }}
-                                onRow={(record) => {
-                                    return {
-                                        onClick: () => {
-                                            this.handleClickedRow(record);
-                                        },
-                                    };
-                                }}
-                            />
-                        )
+                        <Table
+                            pagination={{
+                                current: currentPage,
+                                total: totalElements,
+                                pageSize: 10,
+                                onChange: this.handlePaginationChange,
+                                showTotal: (totalElements) => `ВСЕ: ${totalElements}`,
+                            }}
+                            tableLayout="fixed"
+                            bordered
+                            size="small"
+                            rowSelection={rowSelection}
+                            columns={studentColumns}
+                            dataSource={listColumns}
+                            rowKey="id"
+                            scroll={{x: 1000}}
+                            onRow={(record) => {
+                                return {
+                                    onClick: () => {
+                                        this.handleClickedRow(record);
+                                    },
+                                };
+                            }}
+                        />
+                    )
                 }
             </div>
         );

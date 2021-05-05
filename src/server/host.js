@@ -5,9 +5,9 @@ import { userAccessTokenName } from "../constants";
 
 export const token = getCookie(userAccessTokenName);
 
-export let host = "https://onlinezako-application.herokuapp.com";
-// export let host = "http://localhost";
-// export let port = '8081';
+export let host = "https://online-test-web-app.herokuapp.com";
+// export let host = "https://educational-center-web-app.herokuapp.com";
+// export let port = '8084';
 export let port = '';
 
 export let headers = {
@@ -19,5 +19,5 @@ export let headers = {
 export let axiosInstance = axios.create({
     baseURL: `${host}:${port}`,
     headers,
-    timeout: 30000,
+    timeout: 100000,
 });

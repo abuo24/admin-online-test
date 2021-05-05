@@ -7,8 +7,7 @@ import "../../pages.scss";
 import {createCategory, updateCategory} from "../../../server/config/admin/Category";
 
 const initialParams = {
-    nameRu: null,
-    nameUz: null,
+    name: null,
 };
 
 class ModalForm extends React.Component {
@@ -111,8 +110,7 @@ class ModalForm extends React.Component {
         } = this.state;
 
         const {
-            nameRu,
-            nameUz,
+            name,
         } = this.state.params;
         const {edit} = this.props;
         return (
@@ -144,42 +142,24 @@ class ModalForm extends React.Component {
                         onFinish={this.onFinish}
                         ref={this.currentForm}
                         initialValues={{
-                            nameRu,
-                            nameUz,
+                            name,
                         }}
                     >
                         <Row gutter={[16]}>
                             <Col span={24}>
                                 <Form.Item
                                     label={"NameRu"}
-                                    name="nameRu"
+                                    name="name"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'NameRu!',
+                                            message: 'Name!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'NameRu'}
-                                        name="nameRu"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    label={"NameUz"}
-                                    name="nameUz"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'NameUz!',
-                                        },
-                                    ]}
-                                >
-                                    <Input
-                                        placeholder={'NameUz'}
-                                        name="nameUz"
+                                        placeholder={'Name'}
+                                        name="name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>

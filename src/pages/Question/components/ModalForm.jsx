@@ -276,12 +276,12 @@ class ModalForm extends React.Component {
                         <Row gutter={[16]}>
                             <Col md={24} lg={12}>
                                 <Form.Item
-                                    label={"Название курса (узбек)"}
+                                    label={"Название Вопрос (узбек)"}
                                     name="questionUz"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Название курса (узбек)!`,
+                                            message: `Название Вопрос (узбек)!`,
                                         },
                                     ]}
                                 >
@@ -289,18 +289,18 @@ class ModalForm extends React.Component {
                                         name="questionUz"
                                         type={"classic"}
                                         onChange={e => this.handleCKUChangeUz("questionUz", e)}
-                                        data={edit?questionUz:"Answer 1 Uz"}
+                                        data={edit?questionUz:"Название Вопрос (узбек)"}
                                     />
                                 </Form.Item>
                             </Col>
                             <Col md={24} lg={12}>
                                 <Form.Item
-                                    label={"Название курса (узбек)"}
+                                    label={"Название Вопрос (русский)"}
                                     name="questionRu"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Название курса (узбек)!`,
+                                            message: `Название Вопрос (русский)!`,
                                         },
                                     ]}
                                 >
@@ -308,25 +308,25 @@ class ModalForm extends React.Component {
                                         name="questionRu"
                                         type={"classic"}
                                         onChange={e => this.handleCKUChangeUz("questionRu", e)}
-                                        data={edit?questionRu:"Answer 1 Uz"}
+                                        data={edit?questionRu:"Название Вопрос (русский)"}
                                     />
                                 </Form.Item>
                             </Col>
 
                             <Col md={24} lg={12}>
                                 <Form.Item
-                                    label={"Учитель"}
+                                    label={"Предмет"}
                                     name="subject"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Учитель!`,
+                                            message: `Предмет!`,
                                         },
                                     ]}
                                 >
                                     <Select
                                         showSearch
-                                        placeholder={"Блокь 2 предметы"}
+                                        placeholder={"Предмет"}
                                         onChange={(item) => {
                                             this.handleSelectChange('subjectsId', item)
                                         }}
@@ -345,18 +345,18 @@ class ModalForm extends React.Component {
                                 </Form.Item>
                             </Col> <Col md={24} lg={12}>
                             <Form.Item
-                                label={"Учитель"}
+                                label={"Номер правильного ответа"}
                                 name="correct"
                                 rules={[
                                     {
                                         required: true,
-                                        message: `Учитель!`,
+                                        message: `Номер правильного ответа!`,
                                     },
                                 ]}
                             >
                                 <Select
                                     showSearch
-                                    placeholder={"Блокь 2 предметы"}
+                                    placeholder={"Номер правильного ответа"}
                                     onChange={(item) => {
                                         this.handleSelectChange('correctId', item)
                                     }}
@@ -378,12 +378,12 @@ class ModalForm extends React.Component {
                                 <Row gutter={[10]}>
                                     <Col md={24} lg={12}>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Первый ответ (узбек)"}
                                             name="answer1Uz"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Первый ответ (узбек)!`,
                                                 },
                                             ]}
                                         >
@@ -391,16 +391,16 @@ class ModalForm extends React.Component {
                                                 name="answer1Uz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer1Uz", e)}
-                                                data={edit?answer&&answer[0]&&answer[0].titleUz:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[0]&&answer[0].titleUz:"Первый ответ (узбек)"}
                                             />
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Второй ответ (узбек)"}
                                             name="answer2Uz"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Второй ответ (узбек)!`,
                                                 },
                                             ]}
                                         >
@@ -408,17 +408,17 @@ class ModalForm extends React.Component {
                                                 name="answer2Uz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer2Uz", e)}
-                                                data={edit?answer&&answer[1]&&answer[1].titleUz:"Answer 2 Uz"}
+                                                data={edit?answer&&answer[1]&&answer[1].titleUz:"Второй ответ (узбек)"}
                                             />
 
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Третий ответ (узбек)"}
                                             name="answer3Uz"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Третий ответ (узбек)!`,
                                                 },
                                             ]}
                                         >
@@ -426,16 +426,16 @@ class ModalForm extends React.Component {
                                                 name="answer3Uz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer3Uz", e)}
-                                                data={edit?answer&&answer[2]&&answer[2].titleUz:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[2]&&answer[2].titleUz:"Третий ответ (узбек)"}
                                             />
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Четвертый ответ (узбек)"}
                                             name="answer4Uz"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Четвертый ответ (узбек)!`,
                                                 },
                                             ]}
                                         >
@@ -443,7 +443,7 @@ class ModalForm extends React.Component {
                                                 name="answer4Uz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer4Uz", e)}
-                                                data={edit?answer&&answer[3]&&answer[3].titleUz:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[3]&&answer[3].titleUz:"Четвертый ответ (узбек)"}
                                             />
 
                                         </Form.Item>
@@ -451,12 +451,12 @@ class ModalForm extends React.Component {
                                     </Col>
                                     <Col md={24} lg={12}>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Первый ответ (русский)"}
                                             name="answer1Ru"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Первый ответ (русский)!`,
                                                 },
                                             ]}
                                         >
@@ -464,16 +464,16 @@ class ModalForm extends React.Component {
                                                 name="answer1Ru"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer1Ru", e)}
-                                                data={edit?answer&&answer[0]&&answer[0].titleRu:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[0]&&answer[0].titleRu:"Первый ответ (русский)"}
                                             />
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Второй ответ (русский)"}
                                             name="answer2Ru"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Второй ответ (русский)!`,
                                                 },
                                             ]}
                                         >
@@ -481,17 +481,17 @@ class ModalForm extends React.Component {
                                                 name="nameUz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer2Ru", e)}
-                                                data={edit?answer&&answer[1]&&answer[1].titleRu:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[1]&&answer[1].titleRu:"Второй ответ (русский)"}
                                             />
 
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Третий ответ (русский)"}
                                             name="answer3Ru"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Третий ответ (русский)!`,
                                                 },
                                             ]}
                                         >
@@ -499,16 +499,16 @@ class ModalForm extends React.Component {
                                                 name="nameUz"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer3Ru", e)}
-                                                data={edit?answer&&answer[2]&&answer[2].titleRu:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[2]&&answer[2].titleRu:"Третий ответ (русский)"}
                                             />
                                         </Form.Item>
                                         <Form.Item
-                                            label={"Название курса (узбек)"}
+                                            label={"Четвертый ответ (русский)"}
                                             name="answer4Ru"
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: `Название курса (узбек)!`,
+                                                    message: `Четвертый ответ (русский)!`,
                                                 },
                                             ]}
                                         >
@@ -516,7 +516,7 @@ class ModalForm extends React.Component {
                                                 name="answer4Ru"
                                                 type={"classic"}
                                                 onChange={e => this.handleCKUChangeUz("answer4Ru", e)}
-                                                data={edit?answer&&answer[3]&&answer[3].titleRu:"Answer 1 Uz"}
+                                                data={edit?answer&&answer[3]&&answer[3].titleRu:"Четвертый ответ (русский)"}
                                             />
 
                                         </Form.Item>

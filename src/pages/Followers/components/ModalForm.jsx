@@ -112,7 +112,7 @@ class ModalForm extends React.Component {
             .then(res=>{
                 if (res) {
                     this.setState({ isSubmitting: false, visible: false, list: res.data.data });
-                    res.data.data.success? message.success("succes"):message.error(res.data.data.message);
+                    // res.data.data.success? message.success("succes"):message.error(res.data.data.message);
                 } else {
                     this.setState({ isSubmitting: false, visible: false });
                 }
@@ -180,56 +180,56 @@ class ModalForm extends React.Component {
                             subjectThird
                         }}
                     >
-                        <h3>Информация о Подписчики</h3>
+                        <h3>Информация о Hаправления</h3>
                         <Row gutter={[16]}>
 
                             <Col span={24}>
                                 <Form.Item
-                                    label={"Полное имя"}
+                                    label={"Hаправления"}
                                     name="name"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Полное имя!`,
+                                            message: `Hаправления!`,
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={"Полное имя"}
+                                        placeholder={"Hаправления"}
                                         name="name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label={"Эл. почта"}
+                                    label={"Kод"}
                                     name="code"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Эл. почта!`,
+                                            message: `Kод!`,
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={"Эл. почта"}
+                                        placeholder={"Kод"}
                                         name="code"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    label={`Блокь 1 предметы`}
+                                    label={`Первый предмет`}
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Категория!`,
+                                            message: `Первый предмет!`,
                                         },
                                     ]}
                                 >
                                     <Select
                                         showSearch
                                         name={"subjectFirst"}
-                                        placeholder={`Блокь 1 предметы`}
+                                        placeholder={`Первый предмет`}
                                         onChange={(value) => this.handleSelectChange(`subjectFirst`, value)}
                                         defaultValue={subjectFirst&&subjectFirst.id?subjectFirst.id:null}
                                     >
@@ -244,18 +244,18 @@ class ModalForm extends React.Component {
                                     </Select>
 
                                 </Form.Item>  <Form.Item
-                                    label={`Блокь 2 предметы`}
+                                    label={`Второй предмет`}
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Категория!`,
+                                            message: `Второй предмет!`,
                                         },
                                     ]}
                                 >
                                     <Select
                                         showSearch
                                         name={"subjectSecond"}
-                                        placeholder={`Блокь 3 предметы`}
+                                        placeholder={`Второй предмет`}
                                         defaultValue={subjectSecond&&subjectSecond.id?subjectSecond.id:null}
                                         onChange={(value) => this.handleSelectChange(`subjectSecond`, value)}
                                     >
@@ -271,18 +271,18 @@ class ModalForm extends React.Component {
                                     </Select>
 
                                 </Form.Item><Form.Item
-                                    label={`Блокь 1 предметы`}
+                                    label={`Третий предмет`}
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Категория!`,
+                                            message: `Третий предмет!`,
                                         },
                                     ]}
                                 >
                                     <Select
                                         showSearch
                                         name={"subjectThird"}
-                                        placeholder={`Блокь 3 предметы`}
+                                        placeholder={`Третий предмет`}
                                         onChange={(value) => this.handleSelectChange(`subjectThird`, value)}
                                         defaultValue={subjectSecond&&subjectSecond.id?subjectSecond.id:null}
                                     >

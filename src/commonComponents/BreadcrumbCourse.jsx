@@ -1,7 +1,6 @@
 import React,{Component} from "react";
 import { Breadcrumb } from 'antd';
 import {Link} from "react-router-dom";
-import Course from "../pages/Course/Course";
 
 class BreadcrumbCourse extends Component{
     constructor(props) {

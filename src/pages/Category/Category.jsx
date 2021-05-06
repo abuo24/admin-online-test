@@ -62,17 +62,17 @@ class Category extends React.Component {
 
         return [
             {
-                title: " Наименование (русский)",
+                title: " Наименование",
                 dataIndex: `name`,
             },
             {
-                title: "Наименование (узбек)",
+                title: "Дата создания",
                 dataIndex: `createAt`,
             },{
-                title: " Модул",
+                title: "Студенты",
                 dataIndex: 'id',
                 render: id =>
-                    <Link to={`/module/${id}`} onClick={()=>this.handleClickedId(id)}>Users</Link>
+                    <Link to={`/module/${id}`} onClick={()=>this.handleClickedId(id)}>Студенты</Link>
             }
         ];
     };
@@ -129,7 +129,7 @@ class Category extends React.Component {
                 <Row align="middle" justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <h3>
-                            Категории
+                            Группы
                         </h3>
                     </Col>
                     <Col>

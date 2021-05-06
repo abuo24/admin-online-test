@@ -1,14 +1,13 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {Modal, Button, Form, Input, message, Row, Col, Checkbox } from 'antd';
+import {Modal, Button, Form, Input, message, Row, Col, Checkbox, Select} from 'antd';
 import {EditOutlined, PlusOutlined} from '@ant-design/icons';
 
 import {host, port} from "../../../server/host";
 
 import "../../pages.scss";
 import {createUsers, updateUsers} from "../../../server/config/admin/Users";
-import CKEditor from "ckeditor4-react";
-import {createTeacher, updateTeacher} from "../../../server/config/admin/Teacher";
+import {Option} from "antd/lib/mentions";
 
 const initialParams = {
     first_name: null,
@@ -32,6 +31,7 @@ class ModalForm extends React.Component {
         };
         this.currentForm = React.createRef();
     }
+
     onFinish = () => {
         const {params} = this.state;
         const objToSend = {
@@ -43,44 +43,26 @@ class ModalForm extends React.Component {
                 const userId = objToSend.id;
                 delete objToSend.id;
                 console.log(objToSend);
-                userType==='student'?(updateUsers(userId, objToSend).then((res) => {
+                (updateUsers(userId, objToSend).then((res) => {
                     if (res) {
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
                     }
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     console.log(initialParams);
-                }).catch(e=>{
-                    message.success('Request failed!');
-                })):(updateTeacher(userId, objToSend).then((res) => {
-                    if (res) {
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
-                    }
-                    this.setState({isSubmitting: false, visible: false});
-                    this.props.getList();
-                    // this.currentForm.current.setFieldsValue(initialParams);
-                }).catch(e=>{
+                }).catch(e => {
                     message.success('Request failed!');
                 }))
             } else {
                 console.log(objToSend);
-                userType==='student'?(createUsers(objToSend).then((res) => {
+                (createUsers(objToSend).then((res) => {
                     if (res) {
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
                     }
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
-                }).catch(e=>{
-                    message.success('Request failed!');
-                })):(createTeacher(objToSend).then((res) => {
-                    if (res) {
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
-                    }
-                    this.setState({isSubmitting: false, visible: false});
-                    this.props.getList();
-                    this.currentForm.current.setFieldsValue(initialParams);
-                }).catch(e=>{
+                }).catch(e => {
                     message.success('Request failed!');
                 }))
             }
@@ -110,7 +92,7 @@ class ModalForm extends React.Component {
         const {edit} = this.props;
         if (edit) {
             const editingObj = this.props.getObj();
-            let hashCode=editingObj.attachment?editingObj.attachment.hashCode:'';
+            let hashCode = editingObj.attachment ? editingObj.attachment.hashCode : '';
             delete editingObj.attachment;
             this.setState({
                 visible: true,
@@ -129,12 +111,14 @@ class ModalForm extends React.Component {
             visible: false,
         })
     };
+
     componentDidMount() {
         const {edit} = this.props;
         if (edit) {
 
         }
     }
+
     handleCKUChangeRu = (event) => {
         const data = event.editor.getData();
         this.setState({
@@ -162,6 +146,7 @@ class ModalForm extends React.Component {
             }
         })
     };
+
     render() {
         const {
             isSubmitting,
@@ -259,8 +244,6 @@ class ModalForm extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
-                            </Col>
-                            <Col span={12}>
                                 <Form.Item
                                     label={"Телефонный номер"}
                                     name="phoneNumber"
@@ -277,7 +260,8 @@ class ModalForm extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
-
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item
                                     label={"Парол"}
                                     name="password"
@@ -293,7 +277,34 @@ class ModalForm extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
-
+                                {/*<Form.Item*/}
+                                {/*    label={"Выберите группу"}*/}
+                                {/*    name="correct"*/}
+                                {/*    rules={[*/}
+                                {/*        {*/}
+                                {/*            required: true,*/}
+                                {/*            message: `Выберите группу!`,*/}
+                                {/*        },*/}
+                                {/*    ]}*/}
+                                {/*>*/}
+                                    {/*<Select*/}
+                                    {/*    showSearch*/}
+                                    {/*    placeholder={"Выберите группу"}*/}
+                                    {/*    onChange={(item) => {*/}
+                                    {/*        this.handleSelectChange('groupId', item)*/}
+                                    {/*    }}*/}
+                                    {/*    // defaultValue={mas.indexOf(correctAnswerId) + 1}*/}
+                                    {/*>*/}
+                                    {/*    {*/}
+                                    {/*        Array.from(Array(4).keys()).map((role) => (*/}
+                                    {/*            <Option value={role + 1}*/}
+                                    {/*                    key={role + 1}>*/}
+                                    {/*                {role + 1}*/}
+                                    {/*            </Option>*/}
+                                    {/*        ))*/}
+                                    {/*    }*/}
+                                    {/*</Select>*/}
+                                {/*</Form.Item>*/}
                             </Col>
                         </Row>
                         <Row className="form-footer" justify="end" gutter={[8]}>

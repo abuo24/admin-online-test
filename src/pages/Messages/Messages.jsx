@@ -8,7 +8,7 @@ import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 import "../pages.scss";
 import moment from "moment";
 import {paginationDefaultItemCount} from "../../constants";
-import {deleteMessage, getHistories, getMessages} from "../../server/config/admin/Messages";
+import {deleteMessage, getHistories} from "../../server/config/admin/Messages";
 
 const { Search } = Input;
 
@@ -61,52 +61,58 @@ class Messages extends React.Component {
             {
                 title: " Полное имя",
                 dataIndex: `fullName`,
+                fixed: 'left',
+                width: 100
             },
 
             {
-                title: " Полное имя",
+                title: "Первый предмет",
                 dataIndex: `blok1`,
+                width: 70
             },
 
             {
-                title: "Эл. адрес",
+                title: "Kоличество правильных ответов",
                 dataIndex: `count1`,
+                width: 80
             },   {
-                title: " Полное имя",
+                title: "Второй предмет",
                 dataIndex: `blok2`,
+                width: 70
             },
 
             {
-                title: "Эл. адрес",
-                dataIndex: `count2`,
+                title: "Kоличество правильных ответов",
+                dataIndex: `count2`,  width: 80
             },  {
-                title: " Полное имя",
-                dataIndex: `blok3`,
+                title: "Третий предмет",
+                dataIndex: `blok3`,  width: 70
             },
 
             {
-                title: "Эл. адрес",
-                dataIndex: `count3`,
+                title: "Kоличество правильных ответов",
+                dataIndex: `count3`,  width: 80
             },
             {
-                title: "Тема",
-                dataIndex: `count`,
+                title: "Общее количество правильных ответов",
+                dataIndex: `count`,  width: 80
             },
             {
-                title: "Тема",
-                dataIndex: `percent`,
+                title: "Процентов",
+                dataIndex: `percent`,  width: 80
             },
             {
-                title: "Эл. адрес",
+                title: "Общий балл",
                 dataIndex: `ball`,
+                fixed: 'right',  width: 100
             },
             {
-                title: "Тема",
-                dataIndex: `time`,
+                title: "Проведенное время",
+                dataIndex: `time`,  width: 80
             },
             {
-                title: "Дата",
-                dataIndex: `createAt`,
+                title: "Время начала",
+                dataIndex: `createAt`,  width: 80
             },
         ];
     };
@@ -118,7 +124,6 @@ class Messages extends React.Component {
         if (current >= 0) {
             {
                 getHistories(current, paginationDefaultItemCount).then((res) => {
-                    console.log(res)
                     if (res&&res.data) {
                         let listRows = [];
                         res.data.data.histories.map(function (u) {
@@ -184,7 +189,7 @@ class Messages extends React.Component {
                 <Row align="middle" justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <h3>
-                            Сообщение
+                            Результаты
                         </h3>
                     </Col>
                     <Col>

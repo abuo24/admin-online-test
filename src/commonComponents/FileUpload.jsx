@@ -7,7 +7,6 @@ import { host, port, token } from '../server/host';
 
 const headers = {
     "Authorization": `Bearer ${token}`,
-    // "Content-Type": `multipart/form-data`,
 }
 
 const FileUpload = (props) => {

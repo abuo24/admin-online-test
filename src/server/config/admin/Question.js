@@ -8,13 +8,7 @@ export const getQuestion = (page, size) => {
     };
     return HttpRequestHub(config);
 };
-// export const getCourses = () => {
-//     const config = {
-//         method: 'GET',
-//         url: `/api/client/subject/all`,
-//     };
-//     return HttpRequestHub(config);
-// };
+
 export const getCoursesWithCategoryId = (categoryId) => {
     const config = {
         method: 'GET',

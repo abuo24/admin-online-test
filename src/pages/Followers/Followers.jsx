@@ -26,7 +26,6 @@ class Followers extends React.Component {
         }
     }
 
-
     getCheckedObj = () => {
         const { list, selectedRowKeys } = this.state;
         let newObj = {};
@@ -60,27 +59,26 @@ class Followers extends React.Component {
     };
 
     renderColumns = () => {
-
         return [
             {
-                title:"Полное имя",
+                title:"Hаправления",
                 dataIndex: 'name',
             },
 
             {
-                title:" Эл. почта",
+                title:"Kод",
                 dataIndex: 'code',
             },
             {
-                title:"Телефонный номер",
+                title:"Первый предмет",
                 dataIndex: 'subjectFirst',
             },
             {
-                title:"Телефонный номер",
+                title:"Второй предмет",
                 dataIndex: 'subjectSecond',
             },
             {
-                title:"Телефонный номер",
+                title: "Третий предмет",
                 dataIndex: 'subjectThird',
             },
 
@@ -94,7 +92,6 @@ class Followers extends React.Component {
     getList = () => {
         const { currentPage } = this.state;
         const current = currentPage - 1;
-        
         if (current >= 0) {{
                 getFollowers(current, paginationDefaultItemCount).then((res) => {
                     if (res) {
@@ -154,7 +151,6 @@ class Followers extends React.Component {
             currentPage,
             selectedRowKeys,
             courses
-
         } = this.state;
         const columns = this.renderColumns();
 
@@ -164,8 +160,8 @@ class Followers extends React.Component {
         }
 
 
-        const isMultiple = selectedRowKeys.length > 0 ? true : false;
-        const isSingle = selectedRowKeys.length === 1 ? true : false;
+        const isMultiple = selectedRowKeys.length > 0;
+        const isSingle = selectedRowKeys.length === 1;
         const {  edit } = this.props;
         return (
             <div className="bg-white site-border">
@@ -173,7 +169,7 @@ class Followers extends React.Component {
                     <Col>
                         <Space>
                             <h3>
-                                Подписчики
+                                Hаправления
                             </h3>
 
                         </Space>
@@ -236,12 +232,10 @@ class Followers extends React.Component {
         );
     }
 }
-
 const mapStateToProps = (state) => {
     return {
         lang: state.initial_data.lang,
         langs: state.initial_data.langs,
     }
 }
-
 export default connect(mapStateToProps)(Followers);

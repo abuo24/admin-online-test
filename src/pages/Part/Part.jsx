@@ -2,15 +2,11 @@ import React from 'react';
 import { Row, Col, Input, Table, Skeleton, Space} from "antd";
 import { connect } from 'react-redux';
 
-import ModalForm from "./components/ModalForm";
-import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 
 import "../pages.scss";
-import {paginationDefaultItemCount} from "../../constants";
-import {deletePart, getParts} from "../../server/config/admin/Part";
+import { getParts} from "../../server/config/admin/Part";
 import {Link} from "react-router-dom";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
-import moment from "moment";
 
 const { Search } = Input;
 
@@ -71,10 +67,10 @@ class Part extends React.Component {
             },
 
             {
-                title: " Уроки",
+                title: " Набор третьих предметов",
                 dataIndex: 'id',
                 render: id =>
-                    <Link to={`/lessons/${id}`} onClick={()=>this.handleClickedId(id)}>Уроки</Link>
+                    <Link to={`/lessons/${id}`} onClick={()=>this.handleClickedId(id)}>Набор третьих предметов</Link>
             },
         ];
     };
@@ -94,7 +90,7 @@ class Part extends React.Component {
             },
             {
                 pathUrl: "/part",
-                pathName: `Часть`,
+                pathName: `Второй набор предметов`,
             }
         ];
     };
@@ -160,7 +156,7 @@ class Part extends React.Component {
                 <Row align="middle" justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <h3>
-                            Часть
+                            Второй набор предметов
                         </h3>
                     </Col>
                     <Col>

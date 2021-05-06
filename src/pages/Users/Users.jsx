@@ -9,11 +9,7 @@ import {paginationDefaultItemCount} from "../../constants";
 import "../pages.scss";
 import {deleteUser, getUsers} from "../../server/config/admin/Users";
 import {Link} from "react-router-dom";
-import {getCourses} from "../../server/config/admin/Course";
 import moment from "moment";
-import {host, port} from "../../server/host";
-import avatar from "../../assets/img/no-picture.jpg";
-import {deleteTeacher, getTeachers} from "../../server/config/admin/Teacher";
 
 const {Search} = Input;
 
@@ -75,13 +71,7 @@ class Users extends React.Component {
             {
                 title: "Дата создания",
                 dataIndex: 'createAt',
-            },
-            {
-                title: " Инфо",
-                dataIndex: 'id',
-                render: id =>
-                    <Link to={`/userInfo/${id}`} onClick={() => this.handleClickedId(id)}>Инфо</Link>
-            },
+            }
         ];
     };
     handleClickedId = (id) => {

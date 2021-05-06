@@ -5,9 +5,6 @@ import {EditOutlined, PlusOutlined} from '@ant-design/icons';
 
 import "../../pages.scss";
 import {createCourse, updateCourse} from "../../../server/config/admin/Course";
-import {host, port} from "../../../server/host";
-import CKEditor from 'ckeditor4-react';
-import {getSubjectById} from "../../../server/config/admin/Category";
 
 const {Option} = Select;
 const initialParams = {
@@ -281,34 +278,34 @@ class ModalForm extends React.Component {
 
                             <Col md={24} lg={12}>
                                 <Form.Item
-                                    label={"Название курса (Русский)"}
+                                    label={"Название предметы (Русский)"}
                                     name="nameRu"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Название курса (Русский)!`,
+                                            message: `Название предметы (Русский)!`,
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={"Название курса (Русский)"}
+                                        placeholder={"Название предметы (Русский)"}
                                         name="nameRu"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label={"Название курса (узбек)"}
+                                    label={"Название предметы (узбек)"}
                                     name="nameUz"
                                     rules={[
                                         {
                                             required: true,
-                                            message: `Название курса (узбек)!`,
+                                            message: `Название предметы (узбек)!`,
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={"Название курса (узбек)"}
+                                        placeholder={"Название предметы (узбек)"}
                                         name="nameUz"
                                         onChange={this.handleInputChange}
                                     />
@@ -316,19 +313,19 @@ class ModalForm extends React.Component {
 
 
                                 {edit ? <Form.Item
-                                    label={"Учитель"}
+                                    label={"Второй набор предметов"}
                                     // name="parentsFirst"
                                     rules={[
                                         {
-                                            required: true,
-                                            message: `Учитель!`,
+                                            required: false,
+                                            message: `Второй набор предметов!`,
                                         },
                                     ]}
                                 >
                                     <Select
                                         showSearch
                                         mode={"multiple"}
-                                        placeholder={"Блокь 2 предметы"}
+                                        placeholder={"Второй набор предметов"}
                                         onChange={(item) => {
                                             this.handleSelectChange('subjectsId', item)
                                         }}
@@ -355,7 +352,7 @@ class ModalForm extends React.Component {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: `Категория!`,
+                                                message: `Блокь!`,
                                             },
                                         ]}
                                     >

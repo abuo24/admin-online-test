@@ -22,12 +22,12 @@ const menus = [
     },
     {
         path: '/followers',
-        label: " Подписчики",
+        label: "Hаправления",
         icon: <ReadOutlined />,
     },
     {
         path: '/messages',
-        label: "Сообщения",
+        label: "Результаты",
         icon: <ScheduleOutlined />,
     },
     {
@@ -37,17 +37,17 @@ const menus = [
     },
     {
         path: '/category',
-        label: "Категории курсов",
+        label: "Группы",
         icon: <OrderedListOutlined />,
     },
     {
         path: '/course',
-        label: " Учебные курсы",
+        label: "Наука",
         icon: <AuditOutlined />,
     },
     {
         path: '/question',
-        label: " Учебные курсы",
+        label: "Вопросов",
         icon: <QuestionCircleOutlined />,
     },
 

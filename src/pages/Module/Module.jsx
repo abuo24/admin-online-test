@@ -4,9 +4,9 @@ import ModalForm from "./components/ModalForm";
 import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 
 import "../pages.scss";
-import {deleteModule, getModule} from "../../server/config/admin/Module";
+import { getModule} from "../../server/config/admin/Module";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
-import {Link} from "react-router-dom";
+
 import moment from "moment";
 import {deleteUser} from "../../server/config/admin/Users";
 
@@ -61,22 +61,26 @@ class Module extends React.Component {
             },
             {
                 pathUrl: "/category",
-                pathName: `Курси`,
-            }
+                pathName: `Группы`,
+            },
+            {
+                pathUrl: "/dashboard",
+                pathName: `Студенты`,
+            },
         ];
     };
     renderColumns = () => {
         return [
             {
-                title: " Наименование (русский)",
+                title: "Ф.И.О",
                 dataIndex: `fullName`,
             },
             {
-                title: "Наименование (узбек)",
+                title: "Тел Номер",
                 dataIndex: `phoneNumber`,
             },
             {
-                title: "Цена",
+                title: "Дата создания",
                 dataIndex: `createAt`,
             }
         ];
@@ -138,15 +142,15 @@ class Module extends React.Component {
             onChange: this.onSelectedRowKeysChange,
         };
 
-        const isMultiple = selectedRowKeys.length > 0 ? true : false;
-        const isSingle = selectedRowKeys.length === 1 ? true : false;
+        const isMultiple = selectedRowKeys.length > 0;
+        const isSingle = selectedRowKeys.length === 1;
         const {  edit } = this.props;
         return (
             <div className="bg-white site-border">
                 <Row align="middle" justify="space-between" className="page-header site-border-bottom">
                     <Col>
                         <h3>
-                            Модули
+                            Студенты
                         </h3>
                     </Col>
                     <Col>

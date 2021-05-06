@@ -9,8 +9,6 @@ import {paginationDefaultItemCount} from "../../constants";
 import "../pages.scss";
 import {Link} from "react-router-dom";
 import {deleteCourse, getCourse} from "../../server/config/admin/Course";
-import {getTeachers} from "../../server/config/admin/Teacher";
-import {getCategories} from "../../server/config/admin/Category";
 
 const {Search} = Input;
 
@@ -68,21 +66,21 @@ class Course extends React.Component {
     renderColumns = () => {
         return [
             {
-                title: " Название курса (Русский)",
+                title: " Название предметы (Русский)",
                 dataIndex: 'nameRu',
             },
             {
-                title: " Название курса (Русский)",
+                title: " Название предметы (Узбекский)",
                 dataIndex: 'nameUz',
             }, {
-                title: " Название курса (Русский)",
+                title: "Второй набор предметы",
                 dataIndex: 'parentsFirst',
             },
             {
-                title: "3 blok",
+                title: "Вторые предметы",
                 dataIndex: 'id',
                 render: id =>
-                    <Link to={`/part/${id}`} onClick={()=>this.handleClickedId(id)}>3 Blok</Link>
+                    <Link to={`/part/${id}`} onClick={()=>this.handleClickedId(id)}>Вторые предметы</Link>
             },
         ];
     };
@@ -171,7 +169,7 @@ class Course extends React.Component {
                     <Col>
                         <Space>
                             <h3>
-                                Список курсов
+                                Список предметы
                             </h3>
 
                         </Space>

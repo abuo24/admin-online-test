@@ -148,17 +148,17 @@ class ModalForm extends React.Component {
                         <Row gutter={[16]}>
                             <Col span={24}>
                                 <Form.Item
-                                    label={"NameRu"}
+                                    label={"Наименование"}
                                     name="name"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Name!',
+                                            message: 'Наименование!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'Name'}
+                                        placeholder={'Наименование'}
                                         name="name"
                                         onChange={this.handleInputChange}
                                     />

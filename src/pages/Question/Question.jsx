@@ -8,9 +8,7 @@ import {paginationDefaultItemCount} from "../../constants";
 
 import "../pages.scss";
 import {Link} from "react-router-dom";
-import {deleteCourse, getCourse, getCourses} from "../../server/config/admin/Course";
-import {getTeachers} from "../../server/config/admin/Teacher";
-import {getCategories} from "../../server/config/admin/Category";
+import { getCourses} from "../../server/config/admin/Course";
 import {deleteQuestion, getQuestion} from "../../server/config/admin/Question";
 
 const {Search} = Input;
@@ -19,8 +17,6 @@ class Question extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // courseId: null,
-            // module: false,
             list: [],
             selectedRowKeys: [],
             isFetching: true,
@@ -68,25 +64,19 @@ class Question extends React.Component {
     renderColumns = () => {
         return [
             {
-                title: " Название курса (Русский)",
+                title: " Название Вопрос (Русский)",
                 dataIndex: 'nameRu',
             },
             {
-                title: " Название курса (Русский)",
+                title: " Название Вопрос (Узбекский)",
                 dataIndex: 'nameUz',
             }, {
-                title: " Название курса (Русский)",
+                title: "Правильный ответ",
                 dataIndex: 'correctAnswer',
             },{
-                title: " Название курса (Русский)",
+                title: " Название предмет",
                 dataIndex: 'subject',
-            },
-            {
-                title: "3 blok",
-                dataIndex: 'id',
-                render: id =>
-                    <Link to={`/answer/${id}`} onClick={()=>this.handleClickedId(id)}>Answers</Link>
-            },
+            }
         ];
     };
     getList = () => {
@@ -177,7 +167,7 @@ class Question extends React.Component {
                     <Col>
                         <Space>
                             <h3>
-                                Список курсов
+                                Список Вопросов
                             </h3>
 
                         </Space>

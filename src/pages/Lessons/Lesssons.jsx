@@ -3,11 +3,7 @@ import { Row, Col, Input, Table, Skeleton, Space} from "antd";
 import { connect } from 'react-redux';
 
 import "../pages.scss";
-import {paginationDefaultItemCount} from "../../constants";
 import BreadcrumbCourse from "../../commonComponents/BreadcrumbCourse";
-import {deleteLesson, getLesson} from "../../server/config/admin/Lessons";
-import ModalForm from "../Lessons/components/ModalForm";
-import DeleteConfirm from "../../commonComponents/DeleteConfirm";
 import {getPart} from "../../server/config/admin/Part";
 
 const { Search } = Input;
@@ -83,11 +79,11 @@ class Lesssons extends React.Component {
             },
             {
                 pathUrl: "/part",
-                pathName: `Часть`,
+                pathName: `Второй набор предметов`,
             },
             {
                 pathUrl: "/lessons",
-                pathName: `Уроки`,
+                pathName: `Набор третьих предметов`,
             }
         ];
     };
@@ -142,8 +138,8 @@ class Lesssons extends React.Component {
             onChange: this.onSelectedRowKeysChange,
         };
 
-        const isMultiple = selectedRowKeys.length > 0 ? true : false;
-        const isSingle = selectedRowKeys.length === 1 ? true : false;
+        const isMultiple = selectedRowKeys.length > 0;
+        const isSingle = selectedRowKeys.length === 1;
         const {  edit } = this.props;
 
         return (

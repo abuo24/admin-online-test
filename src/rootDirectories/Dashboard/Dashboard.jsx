@@ -35,8 +35,6 @@ import Module from "../../pages/Module/Module";
 import Part from "../../pages/Part/Part";
 import Lesssons from "../../pages/Lessons/Lesssons";
 import Followers from "../../pages/Followers/Followers";
-import UserInfo from "../../pages/UserInfo/UserInfo";
-import Answer from "../../pages/Answer/Answer";
 import Question from "../../pages/Question/Question";
 
 const Base64 = import('js-base64').then((module) => module);
@@ -52,11 +50,8 @@ const routes = [
     {
         path: "/followers",
         component: <Followers/>,
-    },
-    {
-        path: "/userInfo",
-        component: <UserInfo/>,
-    },
+    }
+    ,
     {
         path: "/module",
         component: <Module/>,
@@ -88,11 +83,7 @@ const routes = [
     {
         path: "/question",
         component: <Question/>,
-    },
-    {
-        path: "/answer",
-        component: <Answer/>,
-    },
+    }
 ];
 
 class Dashboard extends React.Component {

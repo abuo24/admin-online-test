@@ -4,7 +4,6 @@ import {Modal, Button, Form, Input, message, Row, Col} from 'antd';
 import {EditOutlined, PlusOutlined} from '@ant-design/icons';
 
 import "../../pages.scss";
-import {createModule, updateModule} from "../../../server/config/admin/Module";
 import {createUsers, updateUsers} from "../../../server/config/admin/Users";
 
 const initialParams = {
@@ -154,66 +153,66 @@ class ModalForm extends React.Component {
                         <Row gutter={[16]}>
                             <Col span={24}>
                                 <Form.Item
-                                    label={"Русское Название"}
+                                    label={"Имя"}
                                     name="first_name"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Русское Название!',
+                                            message: 'Имя!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'NameRu'}
+                                        placeholder={'Имя'}
                                         name="first_name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label={"Узбекский Название"}
+                                    label={"Фамилия"}
                                     name="last_name"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Узбекский Название!',
+                                            message: 'Фамилия!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'NameUz'}
+                                        placeholder={'Фамилия'}
                                         name="last_name"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>
                                 {!edit ? <Form.Item
-                                    label={"Русское Название"}
+                                    label={"Парол"}
                                     name="password"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Русское Название!',
+                                            message: 'Парол!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'NameRu'}
+                                        placeholder={'Парол'}
                                         name="password"
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Item>:""}
                                 <Form.Item
-                                    label={"Цена"}
+                                    label={"Телефонный номер"}
                                     name="phoneNumber"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Цена!',
+                                            message: 'Телефонный номер!',
                                         },
                                     ]}
                                 >
                                     <Input
-                                        placeholder={'NameUz'}
+                                        placeholder={'Телефонный номер'}
                                         name="phoneNumber"
                                         onChange={this.handleInputChange}
                                     />

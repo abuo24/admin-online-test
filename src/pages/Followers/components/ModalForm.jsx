@@ -41,26 +41,26 @@ class ModalForm extends React.Component {
                 updateFollower(userId, objToSend).then((res) => {
                     if (res) {
                         this.setState({ isSubmitting: false, visible: false });
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.succes? message.success(res.data.message):message.error(res.data.message);
                     } else {
                         this.setState({ isSubmitting: false, visible: false });
                     }
                     this.props.getList();
                 }).catch(e=>{
-                    message.success('Request failed!');
+                    message.error('Request failed!');
                 })
             } else {
                 createFollower(objToSend).then((res) => {
                     if (res) {
                         this.setState({ isSubmitting: false, visible: false });
-                        res.data.success? message.success(res.data.message):message.error(res.data.message);
+                        res.data.succes? message.success(res.data.message):message.error(res.data.message);
                     } else {
                         this.setState({ isSubmitting: false, visible: false });
                     }
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
                 }).catch(e=>{
-                    message.success('Request failed!');
+                    message.error('Request failed!');
                 })
             }
         });

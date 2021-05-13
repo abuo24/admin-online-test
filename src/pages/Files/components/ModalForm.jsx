@@ -83,7 +83,7 @@ class ModalForm extends React.Component {
                     });
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
-                    response.data.success? message.success('Save successful'):message.error('Save failed');
+                    response.data.succes? message.success('Save successful'):message.error('Save failed');
                 }).catch(e => {
                     message.error("Request failed!");
                 })

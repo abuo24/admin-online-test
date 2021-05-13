@@ -47,7 +47,7 @@ class ModalForm extends React.Component {
                 updateCourse(userId, objToSend).then((res) => {
                     if (res) {
                         this.setState({isSubmitting: false, visible: false});
-                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
+                        res.data.succes ? message.success(res.data.message) : message.error(res.data.message);
                     } else {
                         message.success('Request failed!');
                         this.setState({isSubmitting: false, visible: false});
@@ -61,7 +61,7 @@ class ModalForm extends React.Component {
                 createCourse(objToSend).then((res) => {
                     if (res) {
                         this.setState({isSubmitting: false, visible: false});
-                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
+                        res.data.succes ? message.success(res.data.message) : message.error(res.data.message);
                     } else {
                         message.success('Request failed!');
                         this.setState({isSubmitting: false, visible: false});
@@ -69,7 +69,7 @@ class ModalForm extends React.Component {
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
                 }).catch(e => {
-                    message.success('Request failed!');
+                    message.error('Request failed!');
                 });
             }
         });

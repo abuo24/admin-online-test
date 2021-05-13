@@ -45,25 +45,25 @@ class ModalForm extends React.Component {
                 console.log(objToSend);
                 (updateUsers(userId, objToSend).then((res) => {
                     if (res) {
-                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
+                        res.data.succes ? message.success(res.data.message) : message.error(res.data.message);
                     }
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     console.log(initialParams);
                 }).catch(e => {
-                    message.success('Request failed!');
+                    message.error('Request failed!');
                 }))
             } else {
                 console.log(objToSend);
                 (createUsers(objToSend).then((res) => {
                     if (res) {
-                        res.data.success ? message.success(res.data.message) : message.error(res.data.message);
+                        res.data.succes ? message.success(res.data.message) : message.error(res.data.message);
                     }
                     this.setState({isSubmitting: false, visible: false});
                     this.props.getList();
                     this.currentForm.current.setFieldsValue(initialParams);
                 }).catch(e => {
-                    message.success('Request failed!');
+                    message.error('Request failed!');
                 }))
             }
         });
